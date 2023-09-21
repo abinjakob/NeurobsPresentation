@@ -1,0 +1,98 @@
+begin;
+
+text { caption="1"; width = 300; height = 300; background_color = 255, 0, 0; font_size=20; alpha=200; } txt1;
+text { caption="2"; width = 300; height = 300; background_color = 0, 255, 0; font_size=20; alpha=200; } txt2;
+text { caption="3"; width = 300; height = 300; background_color = 0, 0, 255; font_size=20; alpha=200; } txt3;
+text { caption="4"; width = 300; height = 300; background_color = 255, 128, 0; font_size=20; alpha=200; } txt4;
+
+text { caption=" "; alpha = 0; } empty;
+
+trial {
+	stimulus_event {
+		picture {
+			#background_color = 0, 0, 0;
+		} pic1;
+		code = "stim";
+	} stim1;
+} trial1;
+
+begin_pcl;
+
+# this represents the number of stimuli we add
+int count = 0;
+
+# these arrays represent each steady state stimuli added
+array<int> positions[0][2];  # x, y position of stimuli
+array<int> intervals[0];     # number of refreshes between onset
+array<int> durations[0];     # number of refreshes until clearing this stim
+array<int> counts[0];        # counter for coordinating onset and clear events
+array<graphic_surface> stims[0]; # list of actual stimuli used (any child of graphic_surface can be used)
+array<int> index[0];         # the index in the picture object at which this stim resides
+
+# This function adds your stimulus to the supporting arrays
+# graphic can be text, bitmap, or any other child of graphic_surface
+# x and y are in pixels.  (0,0) is the center of the screen
+# interval is the number of screen refreshes between onsets
+# duration is the number of screen refreshes between clearing of the stim
+sub add_stim( graphic_surface graphic, int x, int y, int interval, int duration ) begin
+	count = count + 1;
+	array<int> pos[2];
+	pos[1] = x;
+	pos[2] = y;
+	positions.add( pos );
+	intervals.add( interval );
+	durations.add( duration );
+	stims.add( graphic );
+	counts.add(0);
+	pic1.add_part( empty, x, y );
+	index.add( pic1.part_count() );
+end;
+
+# This function will loop through stimuli and add them or remove them
+# from the picture as dictated by the values in their support arrays.
+# It will then modify the event code and finally present the picture.
+# The event code is formatted "stim-0101" where each 0 or 1 represents
+# whether each stim was visible for that refresh.
+sub iterate begin
+	string event_code = "stim-";
+	loop int i = 1 until i > count begin
+		counts[i] = counts[i] + 1;
+		if counts[i] <= durations[i] then
+			pic1.set_part( index[i], stims[i] );
+			event_code = event_code + "1";
+		else
+			pic1.set_part( index[i], empty );
+			event_code = event_code + "0";
+		end;
+		if counts[i] == intervals[i] then
+			counts[i] = 0;
+		end;
+		i = i + 1;
+	end;
+	stim1.set_event_code( event_code );
+	trial1.present();
+end;
+
+# Here is an example of how to add stimuli to this experiment
+add_stim( txt1, -300,0, 4, 1 ); # 15 Hz
+add_stim( txt2, 300, 0, 6, 3 ); # 10 Hz
+#add_stim( txt3, 125, -125, 7, 3 ); # 5.9 Hz
+#add_stim( txt4, 125, 125, 13, 4 ); # 3.5 Hz
+
+# Here we have an infinite loop calling iterate(), which is all that is required
+# to actually run the experiment.
+loop int j = 1 until j>6 begin
+	iterate();
+	#term.print(pic1.part_count());
+	j = j+1;
+end;
+
+#int total_dur_ms = 4000; # Set total duration in ms
+
+#loop int start = clock.time() until clock.time() >= start + total_dur_ms
+#begin
+#    iterate();
+#end;
+
+#iterate();
+
