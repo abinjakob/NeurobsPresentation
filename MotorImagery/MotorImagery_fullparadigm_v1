@@ -5,7 +5,8 @@ Session Title
 Session Instruction
 Exit Screen
 
-The code runs for both Motor Execution and Motor Imagery sessions. In the sub routine pass 1 for execution and 2 for imagery.
+The code runs for both Motor Execution and Motor Imagery sessions. In the sub routine pass 1 
+for execution and 2 for imagery.
 
 
 #%% HEADER ---------------------------
