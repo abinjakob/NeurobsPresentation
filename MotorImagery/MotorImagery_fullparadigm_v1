@@ -1,1 +1,228 @@
+#%% HEADER ---------------------------
+#
+# Description:
+# Basic Motor Imagery (MI) Paradigm  
+# This presentation code executes a simple MI paradigm with 
+# left hand and right hand movement and execution commands
+# are shown. No feedback was given.
+#
+# Trial Design: Preparation Phase(1000ms), Cue (1000ms), 
+# ME/I (4000ms) and Rest (3000ms to 6000ms)
+# 1 Session: 40 trials (20 left + 20 right selected randomly)
+# Will have 1 session for execution and 1 session for imagery
+#
+# Abin Jacob 
+# 20/09/2023
+
+
+
+
+#%% SDL ------------------------------
+begin;
+
+# array for cues
+array {
+	bitmap{filename = "left_cue.tiff";} my_cue;
+	bitmap{filename = "right_cue.tiff";};
+} cue_text;
+
+# picture declarations:
+# for preparation
+picture{
+	bitmap{filename = "Fixation.tiff";} fix_mark1;
+	x = 0; y = 0;
+} pic_prep;
+
+# for cue
+picture{
+	bitmap my_cue;
+	x = 0; y = 0; 
+} pic_cue;
+
+# for perform
+picture{
+	bitmap{filename = "Fixation.tiff";} fix_mark2;
+	x = 0; y = 0;
+} pic_perform;
+
+# for rest
+picture{
+	text{caption = ""; font_size = 48;} fix_mark3;
+	x = 0; y = 0;
+} pic_rest;
+
+
+# trial declaration
+# main trial
+trial{
+	trial_duration = 9000;		 # ms
+	
+	# prepration (1000 ms)
+	stimulus_event{
+		picture pic_prep;
+		time = 0;
+		code = "prep";
+	} stim_prep;
+	
+	# cue (1000 ms) 
+	stimulus_event{
+		picture pic_cue;
+		time = 993;
+		code = "cue";
+	} stim_cue;
+	
+	# perform (4000 ms)
+	stimulus_event{
+		picture pic_perform;
+		time = 1993;
+		code = "imagery";
+	} stim_perform;
+	
+	# rest (3000 ms to 6000 ms)
+	stimulus_event{
+		picture pic_rest;
+		time = 5993;
+		code = "rest";
+	} stim_rest;
+		
+} main_trial;
+
+# insructions trial
+trial{
+	trial_duration = 1000;		 # ms
+	stimulus_event{
+		picture {
+			text{caption = ""; font_size = 48; max_text_width = 1000;} text_instruction;
+			x = 0; y = 0;
+		} pic_intructions;
+	} stim_instruction;
+} instructions;
+
+
+
+
+
+#%% PCL ------------------------------
+begin_pcl;
+
+# experiment parameters: 
+# total number of trials 
+int total_trials = 40;
+# jitter duration range
+array <int> jitter[] = {3000,6000};
+# time at which rest sequence starts
+int rest_start_time = 6000;
+# variable for random rest duration in loop
+int rest_duration;
+# variable for final trial duration
+int trial_time;
+# array for sessions 
+array <string> session_types[] = {"execution","imagery"};
+
+# number of left or right trials
+int one_trial = total_trials/cue_text.count();
+# array for left and right trials
+array <int> trial_sequence[0];
+
+
+# creating trial sequence for left and right
+# loop over cues 
+loop int iCue=1 until iCue>cue_text.count()
+begin
+	# loop over half of trials
+	loop int iTrial=1 until iTrial>one_trial
+	begin
+		trial_sequence.add(iCue);
+		iTrial = iTrial+1;
+	end;
+	iCue = iCue+1;
+end;
+# Note: created a sequence of trials to be displayed 
+# when '1' it displays left and '2' displays right 
+
+
+# sub routine for running sessions 
+sub session (int session_choice)
+begin 
+	# randomising left and right trial sequence
+	trial_sequence.shuffle();
+	# loop over trial sequence 
+	loop int iTrial=1 until iTrial>trial_sequence.count()
+	begin 
+		# choosing random rest period between 3000 ms and 6000 ms
+		rest_duration = random(jitter[1],jitter[2]);  
+		# checking trial condition
+		if trial_sequence[iTrial] == 1 then
+			# setting cue as left
+			pic_cue.set_part(1, cue_text[1]);
+			# event code for cue 
+			stim_cue.set_event_code("left_cue_" + session_types[session_choice]);
+			# event code for perform
+			stim_perform.set_event_code("left_" + session_types[session_choice]);
+		else
+			# setting cue as right
+			pic_cue.set_part(1, cue_text[2]);
+			# event code for cue
+			stim_cue.set_event_code("right_cue_" + session_types[session_choice]);
+			# event code for perform
+			stim_perform.set_event_code("right_" + session_types[session_choice]);
+		end;	
+		# calculate trial duation with random jitter
+		trial_time = rest_start_time + rest_duration;
+		# set final trial duration
+		main_trial.set_duration(trial_time);
+		# executing trial
+		main_trial.present();	
+		iTrial = iTrial+1;
+	end;
+end;
+
+
+
+# main run ---
+# note: in the subrouine pass '1' for execution session and '2' for imagery session 
+
+# welcome screen 
+text_instruction.set_caption("Welcome", true);
+instructions.present();
+# general description screen 
+text_instruction.set_font_size(24);
+text_instruction.set_caption("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", true);
+instructions.set_duration(3000);
+instructions.present();
+
+
+# motor execution
+# session title
+text_instruction.set_font_size(48);
+text_instruction.set_caption("Motor Execution Session", true);
+instructions.present();
+# session instruction
+text_instruction.set_font_size(24);
+text_instruction.set_caption("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", true);
+instructions.set_duration(3000);
+instructions.present();
+# running motor execution session
+session(1);
+
+
+# motor imagery
+# session title
+text_instruction.set_font_size(48);
+text_instruction.set_caption("Motor Imagery Session", true);
+instructions.present();
+# session instruction
+text_instruction.set_font_size(24);
+text_instruction.set_caption("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", true);
+instructions.set_duration(3000);
+instructions.present();
+# running motor imagery session
+session(2);
+
+# end screen 
+text_instruction.set_font_size(48);
+text_instruction.set_caption("Thank you for participating", true);
+instructions.present();
+
+
 
