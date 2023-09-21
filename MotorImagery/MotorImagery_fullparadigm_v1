@@ -1,3 +1,13 @@
+This paradigm contains the full version with the following:
+Welcome Screen
+General Instructions 
+Session Title
+Session Instruction
+Exit Screen
+
+The code runs for both Motor Execution and Motor Imagery sessions. In the sub routine pass 1 for execution and 2 for imagery.
+
+
 #%% HEADER ---------------------------
 #
 # Description:
