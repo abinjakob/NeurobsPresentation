@@ -1,0 +1,79 @@
+#%% HEADER ---------------------------
+
+# Description:
+# Steady State VEP paradigm designed for the research module 01
+# Trial Design:
+
+# Abin Jacob 
+# 22/09/2023
+
+
+
+
+#%% SDL ------------------------------
+begin;
+
+# array for cues
+array {
+	#bitmap{filename = "left_cue.tiff";} my_cue;
+	#bitmap{filename = "right_cue.tiff";};
+} cue_text;
+
+# stimulus boxes
+box{width = 400; height = 320; color= 255,255,255;} box_on;
+box{width = 400; height = 320; color= 0,0,0;} box_off;
+
+trial {
+	stimulus_event{
+		picture{
+			# left (15 Hz)
+			box box_off;				
+			x = -300; y = 0;
+			# right (10 Hz)
+			box box_off;
+			x = 300; y = 0;
+		} pic_flicker;
+		code = "stim";
+	}stim_flicker;
+} main_trial;
+
+
+
+
+#%% PCL ------------------------------
+begin_pcl;
+
+# parameters
+# stimulus intervals for left (15 Hz) and right stimulus (10 Hz)
+# interval = 1000/ [reqd. frequency * refresh period (16.7 ms)] 
+array <int> stim_interval[] = {4, 6};		
+# within stim interval period where stim is 'ON' for left (15 Hz) and right stimulus (10 Hz)
+array <int> stim_on_period[] = {1,3};	
+# counter for coordinating 'ON' and 'OFF' events
+array <int> count[] = {0,0};
+
+
+# sub routine for the flicker effect
+sub flicker
+begin
+	# initialising event code
+	string event_code = "stim-";
+	# loop over left and right stim
+	loop iStim=1 until iStim>pic_flicker.count()
+	begin 
+		# iterating counter
+		count[i] = count[i] + 1;
+		
+		iStim = iStim + 1;
+	end;
+	main_trial.present();
+end;
+
+	
+	
+	
+
+
+
+
+
