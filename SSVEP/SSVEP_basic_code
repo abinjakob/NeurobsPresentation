@@ -1,0 +1,150 @@
+#%% HEADER ---------------------------
+
+# Description:
+# Steady State VEP paradigm designed for the research module 01
+# Trial Design:
+
+# Abin Jacob 
+# 22/09/2023
+
+
+
+
+#%% SDL ------------------------------
+begin;
+
+# array for cues
+array {
+	#bitmap{filename = "left_cue.tiff";} my_cue;
+	#bitmap{filename = "right_cue.tiff";};
+} cue_text;
+
+# stimulus boxes
+box{width = 400; height = 320; color= 255,255,255;} box_on;
+box{width = 400; height = 320; color= 0,0,0;} box_off;
+
+# picture declarations:
+# for cue
+#picture {} pic_cue;
+
+trial {
+	stimulus_event{
+		picture{
+			# left (15 Hz)
+			box box_off;				
+			x = -300; y = 0;
+			# right (10 Hz)
+			box box_off;
+			x = 300; y = 0;
+		} pic_flicker;
+		code = "stim";
+	}stim_flicker;
+} main_trial;
+
+
+
+
+#%% PCL ------------------------------
+begin_pcl;
+
+# parameters
+# stimulus intervals for left (15 Hz) and right stimulus (10 Hz)
+# interval = 1000/ [reqd. frequency * refresh period (16.7 ms)] 
+array <int> stim_interval[] = {4, 6};		
+# within stim interval period where stim is 'ON' for left (15 Hz) and right stimulus (10 Hz)
+array  <int> stim_on_period[] = {1,3};	
+# counter for coordinating 'ON' and 'OFF' events
+array <int> count[] = {0,0};
+
+# catch trials 
+# catch_left(15Hz -> )
+array <int> stim_interval_catch[2][2] = {{13, 6}, {4, 13}};
+int catch_count = 0;
+
+# sub routine for the flicker effect
+sub flicker
+begin
+	# initialising event code
+	string event_code = "stim-";
+	# loop over left and right stim
+	loop int iStim=1 until iStim>pic_flicker.part_count()
+	begin 
+		# iterating counter
+		count[iStim] = count[iStim] + 1;
+		
+		# controlling the stim on period
+		if count[iStim] <= stim_on_period[iStim] then
+			pic_flicker.set_part(iStim, box_on);
+			event_code = event_code + "1";
+		else 
+			pic_flicker.set_part(iStim, box_off);
+			event_code = event_code + "0";
+		end;
+		
+		# controlling the stim period
+		if count[iStim] == stim_interval[iStim] then
+			# reset count
+			count[iStim] = 0;
+		end;
+		iStim = iStim + 1;
+	end;
+	stim_flicker.set_event_code(event_code);
+	main_trial.present();
+end;
+
+
+# sub routine for the flicker catch trials
+sub flicker_catch(int pos)
+begin
+	# initialising event code
+	string event_code = "catch-";
+	# loop over left and right stim
+	loop int iStim=1 until iStim>pic_flicker.part_count()
+	begin 
+		# iterating counter
+		count[iStim] = count[iStim] + 1;
+		
+		# controlling the stim on period
+		if count[iStim] <= stim_on_period[iStim] then
+			pic_flicker.set_part(iStim, box_on);
+			event_code = event_code + "1";
+		else 
+			pic_flicker.set_part(iStim, box_off);
+			event_code = event_code + "0";
+		end;
+		
+		if catch_count < 200 then
+			# controlling the stim period
+			if count[iStim] == stim_interval[iStim] then
+				# reset count
+				count[iStim] = 0;
+			end;
+		else
+			# controlling the stim period
+			if count[iStim] == stim_interval_catch[pos][iStim] then
+				# reset count
+				count[iStim] = 0;
+			end;
+		end;
+		catch_count = catch_count + 1;
+		iStim = iStim + 1;
+	end;
+	stim_flicker.set_event_code(event_code);
+	main_trial.present();
+end;
+
+
+
+# choose flicker() for normal stim and flicker_catch(pos) for catch stims
+# running infinitely
+loop int j=1 until j>400 begin
+	flicker();
+	j= j+1;
+end;
+	
+	
+
+
+
+
+
