@@ -98,7 +98,7 @@ begin
 	iTrial = iTrial + 10;
 end;
 # randomising catch sequence
-#catch_sequence.shuffle();
+catch_sequence.shuffle();
 
 
 # stimulus intervals for left (15 Hz) and right stimulus (10 Hz)
