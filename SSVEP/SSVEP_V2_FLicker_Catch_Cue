@@ -73,7 +73,11 @@ int one_trial = total_trials / cue_text.count();
 array <int> trial_sequence[0];
 # array for trial and catch trial sequence
 array <int> catch_sequence[40];
+# empty array filled with '0' 
 catch_sequence.fill(1,40,0,0);
+# number of catches 
+int catch_numb = 4;
+int catch_reps = total_trials / catch_numb;
 
 
 # creating trial sequence for left and right
@@ -95,7 +99,7 @@ trial_sequence.shuffle();
 loop int iTrial = 1 until iTrial>catch_sequence.count()
 begin
 	catch_sequence[iTrial] = 1;
-	iTrial = iTrial + 10;
+	iTrial = iTrial + catch_reps;
 end;
 # randomising catch sequence
 catch_sequence.shuffle();
@@ -236,10 +240,3 @@ begin
 	end;
 	iTrial = iTrial + 1;
 end;
-	
-	
-
-
-
-
-
