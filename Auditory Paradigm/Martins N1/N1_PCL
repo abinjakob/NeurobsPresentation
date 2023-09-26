@@ -1,0 +1,274 @@
+   include "countdown.pcl";
+
+	array <int> portcodes[1] = {9}; #trigger in EEG: stimulus onset
+	
+	array <int> codeL[486] = {1,      1,           1,           1,           1,           1,           3,           3,           3,           3,           3,           3,
+           1,           1,           1,           1,           1,           1,           3,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           1,           1,           1,           1,           1,           1,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2, 
+           2,           2,           2,           1,           1,           1,           1,           1,           1,           3,           3,           3,           3, 
+           3,           3,           1,           1,           1,           1,           1,           1,           3,           3,           3,           3,           3,  
+           3,           3,           3,           3,           3,           3,           3,           1,           1,           1,           1,           1,           1,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           1,           1,           1,           1,           1,           1,           3,           3,
+           3,           3,           3,           3,           1,           1,           1,           1,           1,           1,           3,           3,           3,
+           3,           3,           3,           3,           3,           3,           3,           3,           3,           1,           1,           1,           1,
+           1,           1,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           1,           1,           1,           1,           1,           1,
+           3,           3,           3,           3,           3,           3,           1,           1,           1,           1,           1,           1,           3,
+           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           1,           1,
+           1,           1,           1,           1,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           1,           1,           1,           1,
+           1,           1,           3,           3,           3,           3,           3,           3,           1,           1,           1,           1,           1,
+           1,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,
+           1,           1,           1,           1,           1,           1,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           1,           1,
+           1,           1,           1,           1,           3,           3,           3,           3,           3,           3,           1,           1,           1,
+           1,           1,           1,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,
+           3,           3,           1,           1,           1,           1,           1,           1,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           1,           1,           1,           1,           1,           1,           3,           3,           3,           3,           3,           3,           1,
+           1,           1,           1,           1,           1,           3,           3,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           1,           1,           1,           1,           1,           1,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           1,           1,           1,           1,           1,           1,           3,           3,           3,           3,           3,
+           3,           1,           1,           1,           1,           1,           1,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           3,           1,           1,           1,           1,           1,           1,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           1,           1,           1,           1,           1,           1,           3,           3,           3,
+           3,           3,           3,           1,           1,           1,           1,           1,           1,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           3,           3,           3,           1,           1,           1,           1,           1,
+           1,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,               2};
+
+   array <int> codeR[486] = {1,      1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,
+           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,
+           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,
+           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,
+           1,           1,           1,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           1,           1,           1,           1,           1,           1,           1,           1,
+           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,
+           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1, 
+           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,
+           1,           1,           1,           1,           1,           1,           1,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,
+           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           3,           1,           1,
+           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,
+           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,
+           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,
+           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,           1,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,           2,
+           2,           2,           2,           2,           2,               2};
+
+   int code;
+
+	array <int> fillerNum[486] = {1	,	2	,	3	,	4	,	5	,	6	,	7	,	8	,	9	,	10	,	11	,	12	,	13	,	14	,	15	,	16	,	17	,	18	,	19	,	20	,	21	,	22	,	23	,	24	,	25	,	26	,	27	,	28	,	29	,	30	,
+	31	,	32	,	33	,	34	,	35	,	36	,	37	,	38	,	39	,	40	,	41	,	42	,	43	,	44	,	45	,	46	,	47	,	48	,	49	,	50	,	51	,	52	,	53	,	54	,	55	,	56	,	57	,	58	,	59	,	60	,
+	61	,	62	,	63	,	64	,	65	,	66	,	67	,	68	,	69	,	70	,	71	,	72	,	73	,	74	,	75	,	76	,	77	,	78	,	79	,	80	,	81	,	82	,	83	,	84	,	85	,	86	,	87	,	88	,	89	,	90	,
+	91	,	92	,	93	,	94	,	95	,	96	,	97	,	98	,	99	,	100	,	101	,	102	,	103	,	104	,	105	,	106	,	107	,	108	,	109	,	110	,	111	,	112	,	113	,
+	114	,	115	,	116	,	117	,	118	,	119	,	120	,	121	,	122	,	123	,	124	,	125	,	126	,	127	,	128	,	129	,	130	,	131	,	132	,	133	,
+	134	,	135	,	136	,	137	,	138	,	139	,	140	,	141	,	142	,	143	,	144	,	145	,	146	,	147	,	148	,	149	,	150	,	151	,	152	,	153	,
+	154	,	155	,	156	,	157	,	158	,	159	,	160	,	161	,	162	,	163	,	164	,	165	,	166	,	167	,	168	,	169	,	170	,	171	,	172	,	173	,
+	174	,	175	,	176	,	177	,	178	,	179	,	180	,	181	,	182	,	183	,	184	,	185	,	186	,	187	,	188	,	189	,	190	,	191	,	192	,	193	,
+	194	,	195	,	196	,	197	,	198	,	199	,	200	,	201	,	202	,	203	,	204	,	205	,	206	,	207	,	208	,	209	,	210	,	211	,	212	,	213	,
+	214	,	215	,	216	,	217	,	218	,	219	,	220	,	221	,	222	,	223	,	224	,	225	,	226	,	227	,	228	,	229	,	230	,	231	,	232	,	233	,
+	234	,	235	,	236	,	237	,	238	,	239	,	240	,	241	,	242	,	243	,	244	,	245	,	246	,	247	,	248	,	249	,	250	,	251	,	252	,	253	,
+	254	,	255	,	256	,	257	,	258	,	259	,	260	,	261	,	262	,	263	,	264	,	265	,	266	,	267	,	268	,	269	,	270	,	271	,	272	,	273	,
+	274	,	275	,	276	,	277	,	278	,	279	,	280	,	281	,	282	,	283	,	284	,	285	,	286	,	287	,	288	,	289	,	290	,	291	,	292	,	293	,
+	294	,	295	,	296	,	297	,	298	,	299	,	300	,	301	,	302	,	303	,	304	,	305	,	306	,	307	,	308	,	309	,	310	,	311	,	312	,	313	,
+	314	,	315	,	316	,	317	,	318	,	319	,	320	,	321	,	322	,	323	,	324	,	325	,	326	,	327	,	328	,	329	,	330	,	331	,	332	,	333	,
+	334	,	335	,	336	,	337	,	338	,	339	,	340	,	341	,	342	,	343	,	344	,	345	,	346	,	347	,	348	,	349	,	350	,	351	,	352	,	353	,
+	354	,	355	,	356	,	357	,	358	,	359	,	360	,	361	,	362	,	363	,	364	,	365	,	366	,	367	,	368	,	369	,	370	,	371	,	372	,	373	,
+	374	,	375	,	376	,	377	,	378	,	379	,	380	,	381	,	382	,	383	,	384	,	385	,	386	,	387	,	388	,	389	,	390	,	391	,	392	,	393	,
+	394	,	395	,	396	,	397	,	398	,	399	,	400	,	401	,	402	,	403	,	404	,	405	,	406	,	407	,	408	,	409	,	410	,	411	,	412	,	413	,
+	414	,	415	,	416	,	417	,	418	,	419	,	420	,	421	,	422	,	423	,	424	,	425	,	426	,	427	,	428	,	429	,	430	,	431	,	432	,	433	,	
+   434	,	435	,	436	,	437	,	438	,	439	,	440	,	441	,	442	,	443	,	444	,	445	,	446	,	447	,	448	,	449	,	450	,	451	,	452	,	453	,	
+   454	,	455	,	456	,	457	,	458	,	459	,	460	,	461	,	462	,	463	,	464	,	465	,	466	,	467	,	468	,	469	,	470	,	471	,	472	,	473	,
+	474	,	475	,	476	,	477	,	478	,	479	,	480	,	481	,	482	,	483	,	484	,	485	,	486};
+
+
+ array <string> eventcodes[486] = {"stim1"	,	"stim2"	,	"stim3"	,	"stim4"	,	"stim5"	,	"stim6"	,	"stim7"	,	"stim8"	,	"stim9"	,	"stim10"	,	"stim11"	,	"stim12"	,	"stim13"	,
+	"stim14"	,	"stim15"	,	"stim16"	,	"stim17"	,	"stim18"	,	"stim19"	,	"stim20"	,	"stim21"	,	"stim22"	,	"stim23"	,	"stim24"	,	"stim25"	,	"stim26"	,	"stim27"	,	"stim28"	,	"stim29"	,
+	"stim30"	,	"stim31"	,	"stim32"	,	"stim33"	,	"stim34"	,	"stim35"	,	"stim36"	,	"stim37"	,	"stim38"	,	"stim39"	,	"stim40"	,	"stim41"	,	"stim42"	,	"stim43"	,	"stim44"	,	"stim45"	,
+	"stim46"	,	"stim47"	,	"stim48"	,	"stim49"	,	"stim50"	,	"stim51"	,	"stim52"	,	"stim53"	,	"stim54"	,	"stim55"	,	"stim56"	,	"stim57"	,	"stim58"	,	"stim59"	,	"stim60"	,	"stim61"	,
+	"stim62"	,	"stim63"	,	"stim64"	,	"stim65"	,	"stim66"	,	"stim67"	,	"stim68"	,	"stim69"	,	"stim70"	,	"stim71"	,	"stim72"	,	"stim73"	,	"stim74"	,	"stim75"	,	"stim76"	,	"stim77"	,
+	"stim78"	,	"stim79"	,	"stim80"	,	"stim81"	,	"stim82"	,	"stim83"	,	"stim84"	,	"stim85"	,	"stim86"	,	"stim87"	,	"stim88"	,	"stim89"	,	"stim90"	,	"stim91"	,	"stim92"	,	"stim93"	,
+	"stim94"	,	"stim95"	,	"stim96"	,	"stim97"	,	"stim98"	,	"stim99"	,	"stim100"	,	"stim101"	,	"stim102"	,	"stim103"	,	"stim104"	,	"stim105"	,	"stim106"	,	"stim107"	,
+	"stim108"	,	"stim109"	,	"stim110"	,	"stim111"	,	"stim112"	,	"stim113"	,	"stim114"	,	"stim115"	,	"stim116"	,	"stim117"	,	"stim118"	,	"stim119"	,	"stim120"	,
+	"stim121"	,	"stim122"	,	"stim123"	,	"stim124"	,	"stim125"	,	"stim126"	,	"stim127"	,	"stim128"	,	"stim129"	,	"stim130"	,	"stim131"	,	"stim132"	,	"stim133"	,
+	"stim134"	,	"stim135"	,	"stim136"	,	"stim137"	,	"stim138"	,	"stim139"	,	"stim140"	,	"stim141"	,	"stim142"	,	"stim143"	,	"stim144"	,	"stim145"	,	"stim146"	,
+	"stim147"	,	"stim148"	,	"stim149"	,	"stim150"	,	"stim151"	,	"stim152"	,	"stim153"	,	"stim154"	,	"stim155"	,	"stim156"	,	"stim157"	,	"stim158"	,	"stim159"	,
+	"stim160"	,	"stim161"	,	"stim162"	,	"stim163"	,	"stim164"	,	"stim165"	,	"stim166"	,	"stim167"	,	"stim168"	,	"stim169"	,	"stim170"	,	"stim171"	,	"stim172"	,
+	"stim173"	,	"stim174"	,	"stim175"	,	"stim176"	,	"stim177"	,	"stim178"	,	"stim179"	,	"stim180"	,	"stim181"	,	"stim182"	,	"stim183"	,	"stim184"	,	"stim185"	,
+	"stim186"	,	"stim187"	,	"stim188"	,	"stim189"	,	"stim190"	,	"stim191"	,	"stim192"	,	"stim193"	,	"stim194"	,	"stim195"	,	"stim196"	,	"stim197"	,	"stim198"	,
+	"stim199"	,	"stim200"	,	"stim201"	,	"stim202"	,	"stim203"	,	"stim204"	,	"stim205"	,	"stim206"	,	"stim207"	,	"stim208"	,	"stim209"	,	"stim210"	,	"stim211"	,
+	"stim212"	,	"stim213"	,	"stim214"	,	"stim215"	,	"stim216"	,	"stim217"	,	"stim218"	,	"stim219"	,	"stim220"	,	"stim221"	,	"stim222"	,	"stim223"	,	"stim224"	,
+	"stim225"	,	"stim226"	,	"stim227"	,	"stim228"	,	"stim229"	,	"stim230"	,	"stim231"	,	"stim232"	,	"stim233"	,	"stim234"	,	"stim235"	,	"stim236"	,	"stim237"	,
+	"stim238"	,	"stim239"	,	"stim240"	,	"stim241"	,	"stim242"	,	"stim243"	,	"stim244"	,	"stim245"	,	"stim246"	,	"stim247"	,	"stim248"	,	"stim249"	,	"stim250"	,
+	"stim251"	,	"stim252"	,	"stim253"	,	"stim254"	,	"stim255"	,	"stim256"	,	"stim257"	,	"stim258"	,	"stim259"	,	"stim260"	,	"stim261"	,	"stim262"	,	"stim263"	,
+	"stim264"	,	"stim265"	,	"stim266"	,	"stim267"	,	"stim268"	,	"stim269"	,	"stim270"	,	"stim271"	,	"stim272"	,	"stim273"	,	"stim274"	,	"stim275"	,	"stim276"	,
+	"stim277"	,	"stim278"	,	"stim279"	,	"stim280"	,	"stim281"	,	"stim282"	,	"stim283"	,	"stim284"	,	"stim285"	,	"stim286"	,	"stim287"	,	"stim288"	,	"stim289"	,
+	"stim290"	,	"stim291"	,	"stim292"	,	"stim293"	,	"stim294"	,	"stim295"	,	"stim296"	,	"stim297"	,	"stim298"	,	"stim299"	,	"stim300"	,	"stim301"	,	"stim302"	,
+	"stim303"	,	"stim304"	,	"stim305"	,	"stim306"	,	"stim307"	,	"stim308"	,	"stim309"	,	"stim310"	,	"stim311"	,	"stim312"	,	"stim313"	,	"stim314"	,	"stim315"	,
+	"stim316"	,	"stim317"	,	"stim318"	,	"stim319"	,	"stim320"	,	"stim321"	,	"stim322"	,	"stim323"	,	"stim324"	,	"stim325"	,	"stim326"	,	"stim327"	,	"stim328"	,
+	"stim329"	,	"stim330"	,	"stim331"	,	"stim332"	,	"stim333"	,	"stim334"	,	"stim335"	,	"stim336"	,	"stim337"	,	"stim338"	,	"stim339"	,	"stim340"	,	"stim341"	,
+	"stim342"	,	"stim343"	,	"stim344"	,	"stim345"	,	"stim346"	,	"stim347"	,	"stim348"	,	"stim349"	,	"stim350"	,	"stim351"	,	"stim352"	,	"stim353"	,	"stim354"	,
+	"stim355"	,	"stim356"	,	"stim357"	,	"stim358"	,	"stim359"	,	"stim360"	,	"stim361"	,	"stim362"	,	"stim363"	,	"stim364"	,	"stim365"	,	"stim366"	,	"stim367"	,
+	"stim368"	,	"stim369"	,	"stim370"	,	"stim371"	,	"stim372"	,	"stim373"	,	"stim374"	,	"stim375"	,	"stim376"	,	"stim377"	,	"stim378"	,	"stim379"	,	"stim380"	,
+	"stim381"	,	"stim382"	,	"stim383"	,	"stim384"	,	"stim385"	,	"stim386"	,	"stim387"	,	"stim388"	,	"stim389"	,	"stim390"	,	"stim391"	,	"stim392"	,	"stim393"	,
+	"stim394"	,	"stim395"	,	"stim396"	,	"stim397"	,	"stim398"	,	"stim399"	,	"stim400"	,	"stim401"	,	"stim402"	,	"stim403"	,	"stim404"	,	"stim405"	,	"stim406"	,
+	"stim407"	,	"stim408"	,	"stim409"	,	"stim410"	,	"stim411"	,	"stim412"	,	"stim413"	,	"stim414"	,	"stim415"	,	"stim416"	,	"stim417"	,	"stim418"	,	"stim419"	,
+	"stim420"	,	"stim421"	,	"stim422"	,	"stim423"	,	"stim424"	,	"stim425"	,	"stim426"	,	"stim427"	,	"stim428"	,	"stim429"	,	"stim430"	,	"stim431"	,	"stim432"	,
+	"stim433"	,	"stim434"	,	"stim435"	,	"stim436"	,	"stim437"	,	"stim438"	,	"stim439"	,	"stim440"	,	"stim441"	,	"stim442"	,	"stim443"	,	"stim444"	,	"stim445"	,
+	"stim446"	,	"stim447"	,	"stim448"	,	"stim449"	,	"stim450"	,	"stim451"	,	"stim452"	,	"stim453"	,	"stim454"	,	"stim455"	,	"stim456"	,	"stim457"	,	"stim458"	,
+	"stim459"	,	"stim460"	,	"stim461"	,	"stim462"	,	"stim463"	,	"stim464"	,	"stim465"	,	"stim466"	,	"stim467"	,	"stim468"	,	"stim469"	,	"stim470"	,	"stim471"	,
+	"stim472"	,	"stim473"	,	"stim474"	,	"stim475"	,	"stim476"	,	"stim477"	,	"stim478"	,	"stim479"	,	"stim480"	,	"stim481"	,	"stim482"	,	"stim483"	,	"stim484"	,
+	"stim485"	,	"stim486"};
+
+#array <string> trainingcodes[10] = {"stim477"	,	"stim478"	,	"stim479"	,	"stim480"	,	"stim481"	,	"stim482"	,	"stim483"	,	"stim484"   ,	"stim485"	,	"stim486"};
+array <int> trainingcodes[10] = {16,34,326,345,123,423,2,223,231,456};
+
+
+trainingTrial.present();
+
+loop int i = 1 until i > 10
+begin   
+	
+	
+     response_manager.set_button_active( 3, false ); #=8, aufsteigend  switch these buttons off, so they won't be recorded by accident
+     response_manager.set_button_active( 4, false ); #=5, wechselnd
+     response_manager.set_button_active( 5, false ); #=2, absteigend
+
+	  foc.present(); #present the window asking for l/r-decision
+	
+	   if (response_manager.response_count(1) == 1) then
+	      code = codeL[trainingcodes[i]];
+         term.print( code );
+	   elseif (response_manager.response_count(2) == 1) then
+	      code = codeR[trainingcodes[i]];
+         term.print( code );
+      end;
+
+
+	  if     (code == 1) then   #if the tone was ASCENDING, set target button to 13
+	
+	     resptimer.set_target_button(3); 
+ 
+     elseif (code == 3) then   #if the tone was ALTERNATING, set target button to 14
+	
+	     resptimer.set_target_button(4); 
+	
+	  elseif (code == 2) then   #if the tone was DESCENDING, set target button to 15
+	
+	     resptimer.set_target_button(5); 
+	
+     end;
+
+     response_manager.set_button_active( 3, true ); #switch the buttons on again, they are needed now
+     response_manager.set_button_active( 4, true );
+     response_manager.set_button_active( 5, true );
+
+     defaultevent.set_stimulus( stimuli[trainingcodes[i]] );
+     defaultevent.set_time(2500);
+     defaultevent.set_port_code( portcodes[1] );
+     defaultevent.set_event_code( eventcodes[trainingcodes[i]] );
+     defaulttrial.present();
+
+     response_manager.set_button_active( 1, false ); #=1, links     same thing, switch the buttons off and on 
+     response_manager.set_button_active( 2, false ); #=3, rechts
+
+     resp.present();
+
+     response_manager.set_button_active( 1, true ); #=1, links
+     response_manager.set_button_active( 2, true ); #=3, rechts
+
+     waitfixation.present();
+     i = i + 1;
+end;
+
+endtrainingTrial.present();
+
+
+fillerNum.shuffle(); #shuffle filler var, all other variables now use the same index
+
+welcomeTrial.present();
+
+countdown(60);
+loop int i = 1 until i > 150
+begin   
+	
+	
+     response_manager.set_button_active( 3, false ); #=8, aufsteigend  switch these buttons off, so they won't be pressed by accident
+     response_manager.set_button_active( 4, false ); #=5, wechselnd
+     response_manager.set_button_active( 5, false ); #=2, absteigend
+
+	  foc.present(); #present the window asking for l/r-decision
+	
+	   if (response_manager.response_count(1) == 1) then
+	      code = codeL[fillerNum[i]];
+         term.print( code );
+	   elseif (response_manager.response_count(2) == 1) then
+	      code = codeR[fillerNum[i]];
+         term.print( code );
+      end;
+
+
+	  if     (code == 1) then   #if the tone was ASCENDING, set target button to 13
+	
+	     resptimer.set_target_button(3); 
+ 
+     elseif (code == 3) then   #if the tone was ALTERNATING, set target button to 14
+	
+	     resptimer.set_target_button(4); 
+	
+	  elseif (code == 2) then   #if the tone was DESCENDING, set target button to 15
+	
+	     resptimer.set_target_button(5); 
+	
+     end;
+
+     response_manager.set_button_active( 3, true ); #switch the buttons on again, they are needed now
+     response_manager.set_button_active( 4, true );
+     response_manager.set_button_active( 5, true );
+
+     defaultevent.set_stimulus( stimuli[fillerNum[i]] );
+     defaultevent.set_time(2500);
+     defaultevent.set_port_code( portcodes[1] );
+     defaultevent.set_event_code( eventcodes[fillerNum[i]] );
+     defaulttrial.present();
+
+     response_manager.set_button_active( 1, false ); #=1, links     same thing, switch the buttons off and on 
+     response_manager.set_button_active( 2, false ); #=3, rechts
+
+     resp.present();
+
+     response_manager.set_button_active( 1, true ); #=1, links
+     response_manager.set_button_active( 2, true ); #=3, rechts
+     waitfixation.present();
+     i = i + 1;
+end;
+
+endTrial.present();
+
+
+
