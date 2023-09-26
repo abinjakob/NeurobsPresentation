@@ -1,0 +1,13 @@
+sub countdown( int count ) begin
+    loop 
+        int time = clock.time()
+    until count == 0 begin
+        countdown_text.set_caption( string( count ) );
+        countdown_text.redraw();
+        countdownTrial.present();
+        time = time + 1000;
+        wait_until( time );
+        count = count - 1
+    end;
+    default.present()
+end;
