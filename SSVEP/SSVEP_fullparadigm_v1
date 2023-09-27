@@ -14,8 +14,10 @@
 # 22/09/2023
 
 # header parameters 
-response_matching = simple_matching;
+response_matching = legacy_matching;
 active_buttons = 2;
+# ignore logging unintended responses
+response_logging = log_active;
 
 
 #%% SDL ------------------------------
@@ -55,6 +57,8 @@ picture{
 # for fixation + cue 
 trial {
 	trial_duration = 1986;
+	# ignore unintended response
+	all_responses = false;
 	# preparation
 	stimulus_event{
 		picture pic_fixation;
@@ -72,6 +76,8 @@ trial {
 
 # for flicker stim
 trial{	
+	# ignore unintended response
+	all_responses = false;
 	# flicker
 	stimulus_event{
 		picture{
@@ -104,6 +110,8 @@ trial{
 # for iti
 trial{
 	trial_duration = 2000;
+	# ignore unintended response
+	all_responses = false;
 	stimulus_event{
 		picture {
 			text{caption = ""; font_size = 32;} text_iti;
@@ -115,7 +123,9 @@ trial{
 
 # insructions trial
 trial{
-	trial_duration = 1000;		 # ms
+	trial_duration = 1000;	
+	# ignore unintended response
+	all_responses = false;
 	stimulus_event{
 		picture {
 			text{caption = ""; font_size = 48; max_text_width = 1000;} text_instruction;
@@ -271,6 +281,7 @@ text_instruction.set_caption("Lorem ipsum dolor sit amet, consectetur adipiscing
 instructions.set_duration(3000);
 instructions.present();
 
+# trial screens
 # loop over trial_sequence
 loop int iTrial=1 until iTrial>trial_sequence.count()
 begin
