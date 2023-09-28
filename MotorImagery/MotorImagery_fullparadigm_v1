@@ -1,18 +1,7 @@
-This paradigm contains the full version with the following:
-Welcome Screen
-General Instructions 
-Session Title
-Session Instruction
-Exit Screen
-
-The code runs for both Motor Execution and Motor Imagery sessions. In the sub routine pass 1 
-for execution and 2 for imagery.
-
-
 #%% HEADER ---------------------------
 #
 # Description:
-# Basic Motor Imagery (MI) Paradigm  
+# Basic Motor Imagery (MI) Paradigm designed for the research module 01  
 # This presentation code executes a simple MI paradigm with 
 # left hand and right hand movement and execution commands
 # are shown. No feedback was given.
@@ -234,6 +223,5 @@ session(2);
 text_instruction.set_font_size(48);
 text_instruction.set_caption("Thank you for participating", true);
 instructions.present();
-
 
 
