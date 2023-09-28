@@ -16,7 +16,7 @@
 # header parameters 
 response_matching = legacy_matching;
 active_buttons = 2;
-# ignore logging unintended responses
+# ignore loggin unintended responses
 response_logging = log_active;
 
 
