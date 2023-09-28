@@ -1,0 +1,817 @@
+#%% HEADER ---------------------------
+
+# Description:
+# Trial Design:
+
+# Abin Jacob 
+# 26/09/2023
+
+# header parameters 
+response_matching = simple_matching;
+# active buttons 
+# ['1' for 8 (asc), '2' for 5 (alt) and '3' for 2 (dec)] 
+active_buttons = 3;
+# ignore logging unintended responses
+response_logging = log_active;
+
+
+
+
+#%% SDL ------------------------------
+begin;
+
+# array for cues
+array {
+	bitmap{filename = "auditory_left_cue.tiff";} my_cue;
+	bitmap{filename = "auditory_right_cue.tiff";};
+} cue_text;
+
+# array of all sound files for the stim
+array{
+	sound {wavefile {filename = "0001_l_asc_r_asc_c_asc.wav";};}stim_1;
+	sound {wavefile {filename = "0002_l_asc_r_asc_c_alt.wav";};}stim_2;
+	sound {wavefile {filename = "0003_l_asc_r_asc_c_asc.wav";};}stim_3;
+	sound {wavefile {filename = "0004_l_asc_r_asc_c_des.wav";};}stim_4;
+	sound {wavefile {filename = "0005_l_asc_r_asc_c_alt.wav";};}stim_5;
+	sound {wavefile {filename = "0006_l_asc_r_asc_c_des.wav";};}stim_6;
+	sound {wavefile {filename = "0007_l_alt_r_asc_c_asc.wav";};}stim_7;
+	sound {wavefile {filename = "0008_l_alt_r_asc_c_alt.wav";};}stim_8;
+	sound {wavefile {filename = "0009_l_alt_r_asc_c_asc.wav";};}stim_9;
+	sound {wavefile {filename = "0010_l_alt_r_asc_c_des.wav";};}stim_10;
+	sound {wavefile {filename = "0011_l_alt_r_asc_c_alt.wav";};}stim_11;
+	sound {wavefile {filename = "0012_l_alt_r_asc_c_des.wav";};}stim_12;
+	sound {wavefile {filename = "0013_l_asc_r_asc_c_asc.wav";};}stim_13;
+	sound {wavefile {filename = "0014_l_asc_r_asc_c_alt.wav";};}stim_14;
+	sound {wavefile {filename = "0015_l_asc_r_asc_c_asc.wav";};}stim_15;
+	sound {wavefile {filename = "0016_l_asc_r_asc_c_des.wav";};}stim_16;
+	sound {wavefile {filename = "0017_l_asc_r_asc_c_alt.wav";};}stim_17;
+	sound {wavefile {filename = "0018_l_asc_r_asc_c_des.wav";};}stim_18;
+	sound {wavefile {filename = "0019_l_alt_r_asc_c_asc.wav";};}stim_19;
+	sound {wavefile {filename = "0020_l_alt_r_asc_c_alt.wav";};}stim_20;
+	sound {wavefile {filename = "0021_l_alt_r_asc_c_asc.wav";};}stim_21;
+	sound {wavefile {filename = "0022_l_alt_r_asc_c_des.wav";};}stim_22;
+	sound {wavefile {filename = "0023_l_alt_r_asc_c_alt.wav";};}stim_23;
+	sound {wavefile {filename = "0024_l_alt_r_asc_c_des.wav";};}stim_24;
+	sound {wavefile {filename = "0025_l_alt_r_asc_c_asc.wav";};}stim_25;
+	sound {wavefile {filename = "0026_l_alt_r_asc_c_alt.wav";};}stim_26;
+	sound {wavefile {filename = "0027_l_alt_r_asc_c_asc.wav";};}stim_27;
+	sound {wavefile {filename = "0028_l_alt_r_asc_c_des.wav";};}stim_28;
+	sound {wavefile {filename = "0029_l_alt_r_asc_c_alt.wav";};}stim_29;
+	sound {wavefile {filename = "0030_l_alt_r_asc_c_des.wav";};}stim_30;
+	sound {wavefile {filename = "0031_l_asc_r_asc_c_asc.wav";};}stim_31;
+	sound {wavefile {filename = "0032_l_asc_r_asc_c_alt.wav";};}stim_32;
+	sound {wavefile {filename = "0033_l_asc_r_asc_c_asc.wav";};}stim_33;
+	sound {wavefile {filename = "0034_l_asc_r_asc_c_des.wav";};}stim_34;
+	sound {wavefile {filename = "0035_l_asc_r_asc_c_alt.wav";};}stim_35;
+	sound {wavefile {filename = "0036_l_asc_r_asc_c_des.wav";};}stim_36;
+	sound {wavefile {filename = "0037_l_des_r_asc_c_asc.wav";};}stim_37;
+	sound {wavefile {filename = "0038_l_des_r_asc_c_alt.wav";};}stim_38;
+	sound {wavefile {filename = "0039_l_des_r_asc_c_asc.wav";};}stim_39;
+	sound {wavefile {filename = "0040_l_des_r_asc_c_des.wav";};}stim_40;
+	sound {wavefile {filename = "0041_l_des_r_asc_c_alt.wav";};}stim_41;
+	sound {wavefile {filename = "0042_l_des_r_asc_c_des.wav";};}stim_42;
+	sound {wavefile {filename = "0043_l_des_r_asc_c_asc.wav";};}stim_43;
+	sound {wavefile {filename = "0044_l_des_r_asc_c_alt.wav";};}stim_44;
+	sound {wavefile {filename = "0045_l_des_r_asc_c_asc.wav";};}stim_45;
+	sound {wavefile {filename = "0046_l_des_r_asc_c_des.wav";};}stim_46;
+	sound {wavefile {filename = "0047_l_des_r_asc_c_alt.wav";};}stim_47;
+	sound {wavefile {filename = "0048_l_des_r_asc_c_des.wav";};}stim_48;
+   sound {wavefile {filename = "0049_l_des_r_asc_c_asc.wav";};}stim_49;
+	sound {wavefile {filename = "0050_l_des_r_asc_c_alt.wav";};}stim_50;
+	sound {wavefile {filename = "0051_l_des_r_asc_c_asc.wav";};}stim_51;
+	sound {wavefile {filename = "0052_l_des_r_asc_c_des.wav";};}stim_52;
+	sound {wavefile {filename = "0053_l_des_r_asc_c_alt.wav";};}stim_53;
+	sound {wavefile {filename = "0054_l_des_r_asc_c_des.wav";};}stim_54;
+	sound {wavefile {filename = "0055_l_asc_r_alt_c_asc.wav";};}stim_55;
+	sound {wavefile {filename = "0056_l_asc_r_alt_c_alt.wav";};}stim_56;
+	sound {wavefile {filename = "0057_l_asc_r_alt_c_asc.wav";};}stim_57;
+	sound {wavefile {filename = "0058_l_asc_r_alt_c_des.wav";};}stim_58;
+	sound {wavefile {filename = "0059_l_asc_r_alt_c_alt.wav";};}stim_59;
+	sound {wavefile {filename = "0060_l_asc_r_alt_c_des.wav";};}stim_60;
+	sound {wavefile {filename = "0061_l_alt_r_alt_c_asc.wav";};}stim_61;
+	sound {wavefile {filename = "0062_l_alt_r_alt_c_alt.wav";};}stim_62;
+	sound {wavefile {filename = "0063_l_alt_r_alt_c_asc.wav";};}stim_63;
+	sound {wavefile {filename = "0064_l_alt_r_alt_c_des.wav";};}stim_64;
+	sound {wavefile {filename = "0065_l_alt_r_alt_c_alt.wav";};}stim_65;
+	sound {wavefile {filename = "0066_l_alt_r_alt_c_des.wav";};}stim_66;
+	sound {wavefile {filename = "0067_l_asc_r_alt_c_asc.wav";};}stim_67;
+	sound {wavefile {filename = "0068_l_asc_r_alt_c_alt.wav";};}stim_68;
+	sound {wavefile {filename = "0069_l_asc_r_alt_c_asc.wav";};}stim_69;
+	sound {wavefile {filename = "0070_l_asc_r_alt_c_des.wav";};}stim_70;
+	sound {wavefile {filename = "0071_l_asc_r_alt_c_alt.wav";};}stim_71;
+	sound {wavefile {filename = "0072_l_asc_r_alt_c_des.wav";};}stim_72;
+	sound {wavefile {filename = "0073_l_alt_r_alt_c_asc.wav";};}stim_73;
+	sound {wavefile {filename = "0074_l_alt_r_alt_c_alt.wav";};}stim_74;
+	sound {wavefile {filename = "0075_l_alt_r_alt_c_asc.wav";};}stim_75;
+	sound {wavefile {filename = "0076_l_alt_r_alt_c_des.wav";};}stim_76;
+	sound {wavefile {filename = "0077_l_alt_r_alt_c_alt.wav";};}stim_77;
+	sound {wavefile {filename = "0078_l_alt_r_alt_c_des.wav";};}stim_78;
+	sound {wavefile {filename = "0079_l_alt_r_alt_c_asc.wav";};}stim_79;
+	sound {wavefile {filename = "0080_l_alt_r_alt_c_alt.wav";};}stim_80;
+	sound {wavefile {filename = "0081_l_alt_r_alt_c_asc.wav";};}stim_81;
+	sound {wavefile {filename = "0082_l_alt_r_alt_c_des.wav";};}stim_82;
+	sound {wavefile {filename = "0083_l_alt_r_alt_c_alt.wav";};}stim_83;
+	sound {wavefile {filename = "0084_l_alt_r_alt_c_des.wav";};}stim_84;
+	sound {wavefile {filename = "0085_l_asc_r_alt_c_asc.wav";};}stim_85;
+	sound {wavefile {filename = "0086_l_asc_r_alt_c_alt.wav";};}stim_86;
+	sound {wavefile {filename = "0087_l_asc_r_alt_c_asc.wav";};}stim_87;
+	sound {wavefile {filename = "0088_l_asc_r_alt_c_des.wav";};}stim_88;
+	sound {wavefile {filename = "0089_l_asc_r_alt_c_alt.wav";};}stim_89;
+	sound {wavefile {filename = "0090_l_asc_r_alt_c_des.wav";};}stim_90;
+	sound {wavefile {filename = "0091_l_des_r_alt_c_asc.wav";};}stim_91;
+	sound {wavefile {filename = "0092_l_des_r_alt_c_alt.wav";};}stim_92;
+	sound {wavefile {filename = "0093_l_des_r_alt_c_asc.wav";};}stim_93;
+	sound {wavefile {filename = "0094_l_des_r_alt_c_des.wav";};}stim_94;
+	sound {wavefile {filename = "0095_l_des_r_alt_c_alt.wav";};}stim_95;
+   sound {wavefile {filename = "0096_l_des_r_alt_c_des.wav";};}stim_96;
+	sound {wavefile {filename = "0097_l_des_r_alt_c_asc.wav";};}stim_97;
+	sound {wavefile {filename = "0098_l_des_r_alt_c_alt.wav";};}stim_98;
+	sound {wavefile {filename = "0099_l_des_r_alt_c_asc.wav";};}stim_99;
+	sound {wavefile {filename = "0100_l_des_r_alt_c_des.wav";};}stim_100;
+	sound {wavefile {filename = "0101_l_des_r_alt_c_alt.wav";};}stim_101;
+	sound {wavefile {filename = "0102_l_des_r_alt_c_des.wav";};}stim_102;
+	sound {wavefile {filename = "0103_l_des_r_alt_c_asc.wav";};}stim_103;
+	sound {wavefile {filename = "0104_l_des_r_alt_c_alt.wav";};}stim_104;
+	sound {wavefile {filename = "0105_l_des_r_alt_c_asc.wav";};}stim_105;
+	sound {wavefile {filename = "0106_l_des_r_alt_c_des.wav";};}stim_106;
+	sound {wavefile {filename = "0107_l_des_r_alt_c_alt.wav";};}stim_107;
+	sound {wavefile {filename = "0108_l_des_r_alt_c_des.wav";};}stim_108;
+	sound {wavefile {filename = "0109_l_asc_r_asc_c_asc.wav";};}stim_109;
+	sound {wavefile {filename = "0110_l_asc_r_asc_c_alt.wav";};}stim_110;
+	sound {wavefile {filename = "0111_l_asc_r_asc_c_asc.wav";};}stim_111;
+	sound {wavefile {filename = "0112_l_asc_r_asc_c_des.wav";};}stim_112;
+	sound {wavefile {filename = "0113_l_asc_r_asc_c_alt.wav";};}stim_113;
+	sound {wavefile {filename = "0114_l_asc_r_asc_c_des.wav";};}stim_114;
+	sound {wavefile {filename = "0115_l_alt_r_asc_c_asc.wav";};}stim_115;
+	sound {wavefile {filename = "0116_l_alt_r_asc_c_alt.wav";};}stim_116;
+	sound {wavefile {filename = "0117_l_alt_r_asc_c_asc.wav";};}stim_117;
+	sound {wavefile {filename = "0118_l_alt_r_asc_c_des.wav";};}stim_118; 
+	sound {wavefile {filename = "0119_l_alt_r_asc_c_alt.wav";};}stim_119;
+	sound {wavefile {filename = "0120_l_alt_r_asc_c_des.wav";};}stim_120;
+	sound {wavefile {filename = "0121_l_asc_r_asc_c_asc.wav";};}stim_121;
+	sound {wavefile {filename = "0122_l_asc_r_asc_c_alt.wav";};}stim_122;
+	sound {wavefile {filename = "0123_l_asc_r_asc_c_asc.wav";};}stim_123; 
+	sound {wavefile {filename = "0124_l_asc_r_asc_c_des.wav";};}stim_124;
+	sound {wavefile {filename = "0125_l_asc_r_asc_c_alt.wav";};}stim_125;
+	sound {wavefile {filename = "0126_l_asc_r_asc_c_des.wav";};}stim_126;
+	sound {wavefile {filename = "0127_l_alt_r_asc_c_asc.wav";};}stim_127;
+	sound {wavefile {filename = "0128_l_alt_r_asc_c_alt.wav";};}stim_128;
+	sound {wavefile {filename = "0129_l_alt_r_asc_c_asc.wav";};}stim_129;
+	sound {wavefile {filename = "0130_l_alt_r_asc_c_des.wav";};}stim_130;
+	sound {wavefile {filename = "0131_l_alt_r_asc_c_alt.wav";};}stim_131;
+	sound {wavefile {filename = "0132_l_alt_r_asc_c_des.wav";};}stim_132;
+	sound {wavefile {filename = "0133_l_alt_r_asc_c_asc.wav";};}stim_133;
+	sound {wavefile {filename = "0134_l_alt_r_asc_c_alt.wav";};}stim_134;
+	sound {wavefile {filename = "0135_l_alt_r_asc_c_asc.wav";};}stim_135;
+	sound {wavefile {filename = "0136_l_alt_r_asc_c_des.wav";};}stim_136;
+	sound {wavefile {filename = "0137_l_alt_r_asc_c_alt.wav";};}stim_137;
+	sound {wavefile {filename = "0138_l_alt_r_asc_c_des.wav";};}stim_138;
+	sound {wavefile {filename = "0139_l_asc_r_asc_c_asc.wav";};}stim_139;
+	sound {wavefile {filename = "0140_l_asc_r_asc_c_alt.wav";};}stim_140;
+	sound {wavefile {filename = "0141_l_asc_r_asc_c_asc.wav";};}stim_141;
+	sound {wavefile {filename = "0142_l_asc_r_asc_c_des.wav";};}stim_142;
+	sound {wavefile {filename = "0143_l_asc_r_asc_c_alt.wav";};}stim_143;
+	sound {wavefile {filename = "0144_l_asc_r_asc_c_des.wav";};}stim_144;
+	sound {wavefile {filename = "0145_l_des_r_asc_c_asc.wav";};}stim_145;
+	sound {wavefile {filename = "0146_l_des_r_asc_c_alt.wav";};}stim_146;
+	sound {wavefile {filename = "0147_l_des_r_asc_c_asc.wav";};}stim_147;
+	sound {wavefile {filename = "0148_l_des_r_asc_c_des.wav";};}stim_148;
+	sound {wavefile {filename = "0149_l_des_r_asc_c_alt.wav";};}stim_149;
+	sound {wavefile {filename = "0150_l_des_r_asc_c_des.wav";};}stim_150;
+	sound {wavefile {filename = "0151_l_des_r_asc_c_asc.wav";};}stim_151;
+	sound {wavefile {filename = "0152_l_des_r_asc_c_alt.wav";};}stim_152;
+	sound {wavefile {filename = "0153_l_des_r_asc_c_asc.wav";};}stim_153;
+	sound {wavefile {filename = "0154_l_des_r_asc_c_des.wav";};}stim_154;
+	sound {wavefile {filename = "0155_l_des_r_asc_c_alt.wav";};}stim_155;
+	sound {wavefile {filename = "0156_l_des_r_asc_c_des.wav";};}stim_156;
+	sound {wavefile {filename = "0157_l_des_r_asc_c_asc.wav";};}stim_157;
+	sound {wavefile {filename = "0158_l_des_r_asc_c_alt.wav";};}stim_158;
+	sound {wavefile {filename = "0159_l_des_r_asc_c_asc.wav";};}stim_159;
+	sound {wavefile {filename = "0160_l_des_r_asc_c_des.wav";};}stim_160;
+	sound {wavefile {filename = "0161_l_des_r_asc_c_alt.wav";};}stim_161;
+	sound {wavefile {filename = "0162_l_des_r_asc_c_des.wav";};}stim_162;
+	sound {wavefile {filename = "0163_l_asc_r_alt_c_asc.wav";};}stim_163;
+	sound {wavefile {filename = "0164_l_asc_r_alt_c_alt.wav";};}stim_164;
+	sound {wavefile {filename = "0165_l_asc_r_alt_c_asc.wav";};}stim_165;
+	sound {wavefile {filename = "0166_l_asc_r_alt_c_des.wav";};}stim_166;
+	sound {wavefile {filename = "0167_l_asc_r_alt_c_alt.wav";};}stim_167;
+	sound {wavefile {filename = "0168_l_asc_r_alt_c_des.wav";};}stim_168;
+	sound {wavefile {filename = "0169_l_alt_r_alt_c_asc.wav";};}stim_169;
+	sound {wavefile {filename = "0170_l_alt_r_alt_c_alt.wav";};}stim_170;
+	sound {wavefile {filename = "0171_l_alt_r_alt_c_asc.wav";};}stim_171;
+	sound {wavefile {filename = "0172_l_alt_r_alt_c_des.wav";};}stim_172;
+	sound {wavefile {filename = "0173_l_alt_r_alt_c_alt.wav";};}stim_173;
+	sound {wavefile {filename = "0174_l_alt_r_alt_c_des.wav";};}stim_174;
+	sound {wavefile {filename = "0175_l_asc_r_alt_c_asc.wav";};}stim_175;
+	sound {wavefile {filename = "0176_l_asc_r_alt_c_alt.wav";};}stim_176;
+	sound {wavefile {filename = "0177_l_asc_r_alt_c_asc.wav";};}stim_177;
+	sound {wavefile {filename = "0178_l_asc_r_alt_c_des.wav";};}stim_178;
+	sound {wavefile {filename = "0179_l_asc_r_alt_c_alt.wav";};}stim_179;
+	sound {wavefile {filename = "0180_l_asc_r_alt_c_des.wav";};}stim_180;
+	sound {wavefile {filename = "0181_l_alt_r_alt_c_asc.wav";};}stim_181;
+	sound {wavefile {filename = "0182_l_alt_r_alt_c_alt.wav";};}stim_182;
+	sound {wavefile {filename = "0183_l_alt_r_alt_c_asc.wav";};}stim_183;
+	sound {wavefile {filename = "0184_l_alt_r_alt_c_des.wav";};}stim_184;
+	sound {wavefile {filename = "0185_l_alt_r_alt_c_alt.wav";};}stim_185;
+	sound {wavefile {filename = "0186_l_alt_r_alt_c_des.wav";};}stim_186;
+	sound {wavefile {filename = "0187_l_alt_r_alt_c_asc.wav";};}stim_187;
+	sound {wavefile {filename = "0188_l_alt_r_alt_c_alt.wav";};}stim_188;
+	sound {wavefile {filename = "0189_l_alt_r_alt_c_asc.wav";};}stim_189;
+	sound {wavefile {filename = "0190_l_alt_r_alt_c_des.wav";};}stim_190;
+	sound {wavefile {filename = "0191_l_alt_r_alt_c_alt.wav";};}stim_191;
+	sound {wavefile {filename = "0192_l_alt_r_alt_c_des.wav";};}stim_192;
+	sound {wavefile {filename = "0193_l_asc_r_alt_c_asc.wav";};}stim_193;
+	sound {wavefile {filename = "0194_l_asc_r_alt_c_alt.wav";};}stim_194;
+	sound {wavefile {filename = "0195_l_asc_r_alt_c_asc.wav";};}stim_195;
+	sound {wavefile {filename = "0196_l_asc_r_alt_c_des.wav";};}stim_196;
+	sound {wavefile {filename = "0197_l_asc_r_alt_c_alt.wav";};}stim_197;
+	sound {wavefile {filename = "0198_l_asc_r_alt_c_des.wav";};}stim_198;
+	sound {wavefile {filename = "0199_l_des_r_alt_c_asc.wav";};}stim_199;
+	sound {wavefile {filename = "0200_l_des_r_alt_c_alt.wav";};}stim_200;
+   sound {wavefile {filename = "0201_l_des_r_alt_c_asc.wav";};}stim_201;
+	sound {wavefile {filename = "0202_l_des_r_alt_c_des.wav";};}stim_202;
+	sound {wavefile {filename = "0203_l_des_r_alt_c_alt.wav";};}stim_203;
+	sound {wavefile {filename = "0204_l_des_r_alt_c_des.wav";};}stim_204;
+	sound {wavefile {filename = "0205_l_des_r_alt_c_asc.wav";};}stim_205;
+	sound {wavefile {filename = "0206_l_des_r_alt_c_alt.wav";};}stim_206;
+	sound {wavefile {filename = "0207_l_des_r_alt_c_asc.wav";};}stim_207;
+	sound {wavefile {filename = "0208_l_des_r_alt_c_des.wav";};}stim_208;
+	sound {wavefile {filename = "0209_l_des_r_alt_c_alt.wav";};}stim_209;
+	sound {wavefile {filename = "0210_l_des_r_alt_c_des.wav";};}stim_210;
+	sound {wavefile {filename = "0211_l_des_r_alt_c_asc.wav";};}stim_211;
+	sound {wavefile {filename = "0212_l_des_r_alt_c_alt.wav";};}stim_212;
+	sound {wavefile {filename = "0213_l_des_r_alt_c_asc.wav";};}stim_213;
+	sound {wavefile {filename = "0214_l_des_r_alt_c_des.wav";};}stim_214;
+	sound {wavefile {filename = "0215_l_des_r_alt_c_alt.wav";};}stim_215;
+	sound {wavefile {filename = "0216_l_des_r_alt_c_des.wav";};}stim_216;
+	sound {wavefile {filename = "0217_l_asc_r_alt_c_asc.wav";};}stim_217;
+	sound {wavefile {filename = "0218_l_asc_r_alt_c_alt.wav";};}stim_218;
+	sound {wavefile {filename = "0219_l_asc_r_alt_c_asc.wav";};}stim_219;
+	sound {wavefile {filename = "0220_l_asc_r_alt_c_des.wav";};}stim_220;
+	sound {wavefile {filename = "0221_l_asc_r_alt_c_alt.wav";};}stim_221;
+	sound {wavefile {filename = "0222_l_asc_r_alt_c_des.wav";};}stim_222;
+	sound {wavefile {filename = "0223_l_alt_r_alt_c_asc.wav";};}stim_223;
+	sound {wavefile {filename = "0224_l_alt_r_alt_c_alt.wav";};}stim_224;
+	sound {wavefile {filename = "0225_l_alt_r_alt_c_asc.wav";};}stim_225;
+	sound {wavefile {filename = "0226_l_alt_r_alt_c_des.wav";};}stim_226;
+	sound {wavefile {filename = "0227_l_alt_r_alt_c_alt.wav";};}stim_227;
+	sound {wavefile {filename = "0228_l_alt_r_alt_c_des.wav";};}stim_228;
+	sound {wavefile {filename = "0229_l_asc_r_alt_c_asc.wav";};}stim_229;
+	sound {wavefile {filename = "0230_l_asc_r_alt_c_alt.wav";};}stim_230;
+	sound {wavefile {filename = "0231_l_asc_r_alt_c_asc.wav";};}stim_231;
+	sound {wavefile {filename = "0232_l_asc_r_alt_c_des.wav";};}stim_232;
+	sound {wavefile {filename = "0233_l_asc_r_alt_c_alt.wav";};}stim_233;
+	sound {wavefile {filename = "0234_l_asc_r_alt_c_des.wav";};}stim_234;
+	sound {wavefile {filename = "0235_l_alt_r_alt_c_asc.wav";};}stim_235;
+	sound {wavefile {filename = "0236_l_alt_r_alt_c_alt.wav";};}stim_236;
+	sound {wavefile {filename = "0237_l_alt_r_alt_c_asc.wav";};}stim_237;
+	sound {wavefile {filename = "0238_l_alt_r_alt_c_des.wav";};}stim_238;
+	sound {wavefile {filename = "0239_l_alt_r_alt_c_alt.wav";};}stim_239;
+	sound {wavefile {filename = "0240_l_alt_r_alt_c_des.wav";};}stim_240;
+	sound {wavefile {filename = "0241_l_alt_r_alt_c_asc.wav";};}stim_241;
+	sound {wavefile {filename = "0242_l_alt_r_alt_c_alt.wav";};}stim_242;
+	sound {wavefile {filename = "0243_l_alt_r_alt_c_asc.wav";};}stim_243;
+	sound {wavefile {filename = "0244_l_alt_r_alt_c_des.wav";};}stim_244;
+	sound {wavefile {filename = "0245_l_alt_r_alt_c_alt.wav";};}stim_245;
+	sound {wavefile {filename = "0246_l_alt_r_alt_c_des.wav";};}stim_246;
+	sound {wavefile {filename = "0247_l_asc_r_alt_c_asc.wav";};}stim_247;
+	sound {wavefile {filename = "0248_l_asc_r_alt_c_alt.wav";};}stim_248;
+	sound {wavefile {filename = "0249_l_asc_r_alt_c_asc.wav";};}stim_249;
+	sound {wavefile {filename = "0250_l_asc_r_alt_c_des.wav";};}stim_250;
+	sound {wavefile {filename = "0251_l_asc_r_alt_c_alt.wav";};}stim_251;
+	sound {wavefile {filename = "0252_l_asc_r_alt_c_des.wav";};}stim_252;
+	sound {wavefile {filename = "0253_l_des_r_alt_c_asc.wav";};}stim_253;
+	sound {wavefile {filename = "0254_l_des_r_alt_c_alt.wav";};}stim_254;
+	sound {wavefile {filename = "0255_l_des_r_alt_c_asc.wav";};}stim_255;
+	sound {wavefile {filename = "0256_l_des_r_alt_c_des.wav";};}stim_256;
+	sound {wavefile {filename = "0257_l_des_r_alt_c_alt.wav";};}stim_257;
+	sound {wavefile {filename = "0258_l_des_r_alt_c_des.wav";};}stim_258;
+	sound {wavefile {filename = "0259_l_des_r_alt_c_asc.wav";};}stim_259;
+	sound {wavefile {filename = "0260_l_des_r_alt_c_alt.wav";};}stim_260;
+	sound {wavefile {filename = "0261_l_des_r_alt_c_asc.wav";};}stim_261;
+	sound {wavefile {filename = "0262_l_des_r_alt_c_des.wav";};}stim_262;
+	sound {wavefile {filename = "0263_l_des_r_alt_c_alt.wav";};}stim_263;
+	sound {wavefile {filename = "0264_l_des_r_alt_c_des.wav";};}stim_264;
+	sound {wavefile {filename = "0265_l_des_r_alt_c_asc.wav";};}stim_265;
+	sound {wavefile {filename = "0266_l_des_r_alt_c_alt.wav";};}stim_266;
+	sound {wavefile {filename = "0267_l_des_r_alt_c_asc.wav";};}stim_267;
+	sound {wavefile {filename = "0268_l_des_r_alt_c_des.wav";};}stim_268;
+	sound {wavefile {filename = "0269_l_des_r_alt_c_alt.wav";};}stim_269;
+	sound {wavefile {filename = "0270_l_des_r_alt_c_des.wav";};}stim_270;
+	sound {wavefile {filename = "0271_l_asc_r_asc_c_asc.wav";};}stim_271;
+	sound {wavefile {filename = "0272_l_asc_r_asc_c_alt.wav";};}stim_272;
+	sound {wavefile {filename = "0273_l_asc_r_asc_c_asc.wav";};}stim_273;
+	sound {wavefile {filename = "0274_l_asc_r_asc_c_des.wav";};}stim_274;
+	sound {wavefile {filename = "0275_l_asc_r_asc_c_alt.wav";};}stim_275;
+	sound {wavefile {filename = "0276_l_asc_r_asc_c_des.wav";};}stim_276;
+	sound {wavefile {filename = "0277_l_alt_r_asc_c_asc.wav";};}stim_277;
+	sound {wavefile {filename = "0278_l_alt_r_asc_c_alt.wav";};}stim_278;
+	sound {wavefile {filename = "0279_l_alt_r_asc_c_asc.wav";};}stim_279;
+	sound {wavefile {filename = "0280_l_alt_r_asc_c_des.wav";};}stim_280;
+	sound {wavefile {filename = "0281_l_alt_r_asc_c_alt.wav";};}stim_281;
+	sound {wavefile {filename = "0282_l_alt_r_asc_c_des.wav";};}stim_282;
+	sound {wavefile {filename = "0283_l_asc_r_asc_c_asc.wav";};}stim_283;
+	sound {wavefile {filename = "0284_l_asc_r_asc_c_alt.wav";};}stim_284;
+	sound {wavefile {filename = "0285_l_asc_r_asc_c_asc.wav";};}stim_285;
+	sound {wavefile {filename = "0286_l_asc_r_asc_c_des.wav";};}stim_286;
+	sound {wavefile {filename = "0287_l_asc_r_asc_c_alt.wav";};}stim_287;
+	sound {wavefile {filename = "0288_l_asc_r_asc_c_des.wav";};}stim_288;
+	sound {wavefile {filename = "0289_l_alt_r_asc_c_asc.wav";};}stim_289;
+	sound {wavefile {filename = "0290_l_alt_r_asc_c_alt.wav";};}stim_290;
+	sound {wavefile {filename = "0291_l_alt_r_asc_c_asc.wav";};}stim_291;
+	sound {wavefile {filename = "0292_l_alt_r_asc_c_des.wav";};}stim_292;
+	sound {wavefile {filename = "0293_l_alt_r_asc_c_alt.wav";};}stim_293;
+	sound {wavefile {filename = "0294_l_alt_r_asc_c_des.wav";};}stim_294;
+	sound {wavefile {filename = "0295_l_alt_r_asc_c_asc.wav";};}stim_295;
+	sound {wavefile {filename = "0296_l_alt_r_asc_c_alt.wav";};}stim_296;
+	sound {wavefile {filename = "0297_l_alt_r_asc_c_asc.wav";};}stim_297;
+	sound {wavefile {filename = "0298_l_alt_r_asc_c_des.wav";};}stim_298;
+	sound {wavefile {filename = "0299_l_alt_r_asc_c_alt.wav";};}stim_299;
+	sound {wavefile {filename = "0300_l_alt_r_asc_c_des.wav";};}stim_300;
+   sound {wavefile {filename = "0301_l_asc_r_asc_c_asc.wav";};}stim_301;
+	sound {wavefile {filename = "0302_l_asc_r_asc_c_alt.wav";};}stim_302;
+	sound {wavefile {filename = "0303_l_asc_r_asc_c_asc.wav";};}stim_303;
+	sound {wavefile {filename = "0304_l_asc_r_asc_c_des.wav";};}stim_304;
+	sound {wavefile {filename = "0305_l_asc_r_asc_c_alt.wav";};}stim_305;
+	sound {wavefile {filename = "0306_l_asc_r_asc_c_des.wav";};}stim_306;
+	sound {wavefile {filename = "0307_l_des_r_asc_c_asc.wav";};}stim_307;
+	sound {wavefile {filename = "0308_l_des_r_asc_c_alt.wav";};}stim_308;
+	sound {wavefile {filename = "0309_l_des_r_asc_c_asc.wav";};}stim_309;
+	sound {wavefile {filename = "0310_l_des_r_asc_c_des.wav";};}stim_310;
+	sound {wavefile {filename = "0311_l_des_r_asc_c_alt.wav";};}stim_311;
+	sound {wavefile {filename = "0312_l_des_r_asc_c_des.wav";};}stim_312;
+	sound {wavefile {filename = "0313_l_des_r_asc_c_asc.wav";};}stim_313;
+	sound {wavefile {filename = "0314_l_des_r_asc_c_alt.wav";};}stim_314;
+	sound {wavefile {filename = "0315_l_des_r_asc_c_asc.wav";};}stim_315;
+	sound {wavefile {filename = "0316_l_des_r_asc_c_des.wav";};}stim_316;
+	sound {wavefile {filename = "0317_l_des_r_asc_c_alt.wav";};}stim_317;
+	sound {wavefile {filename = "0318_l_des_r_asc_c_des.wav";};}stim_318;
+	sound {wavefile {filename = "0319_l_des_r_asc_c_asc.wav";};}stim_319;
+	sound {wavefile {filename = "0320_l_des_r_asc_c_alt.wav";};}stim_320;
+	sound {wavefile {filename = "0321_l_des_r_asc_c_asc.wav";};}stim_321;
+	sound {wavefile {filename = "0322_l_des_r_asc_c_des.wav";};}stim_322;
+	sound {wavefile {filename = "0323_l_des_r_asc_c_alt.wav";};}stim_323;
+	sound {wavefile {filename = "0324_l_des_r_asc_c_des.wav";};}stim_324;
+	sound {wavefile {filename = "0325_l_asc_r_des_c_asc.wav";};}stim_325;
+	sound {wavefile {filename = "0326_l_asc_r_des_c_alt.wav";};}stim_326;
+	sound {wavefile {filename = "0327_l_asc_r_des_c_asc.wav";};}stim_327;
+	sound {wavefile {filename = "0328_l_asc_r_des_c_des.wav";};}stim_328;
+	sound {wavefile {filename = "0329_l_asc_r_des_c_alt.wav";};}stim_329;
+	sound {wavefile {filename = "0330_l_asc_r_des_c_des.wav";};}stim_330;
+	sound {wavefile {filename = "0331_l_alt_r_des_c_asc.wav";};}stim_331;
+	sound {wavefile {filename = "0332_l_alt_r_des_c_alt.wav";};}stim_332;
+	sound {wavefile {filename = "0333_l_alt_r_des_c_asc.wav";};}stim_333;
+	sound {wavefile {filename = "0334_l_alt_r_des_c_des.wav";};}stim_334;
+	sound {wavefile {filename = "0335_l_alt_r_des_c_alt.wav";};}stim_335;
+	sound {wavefile {filename = "0336_l_alt_r_des_c_des.wav";};}stim_336;
+	sound {wavefile {filename = "0337_l_asc_r_des_c_asc.wav";};}stim_337;
+	sound {wavefile {filename = "0338_l_asc_r_des_c_alt.wav";};}stim_338;
+	sound {wavefile {filename = "0339_l_asc_r_des_c_asc.wav";};}stim_339;
+	sound {wavefile {filename = "0340_l_asc_r_des_c_des.wav";};}stim_340;
+	sound {wavefile {filename = "0341_l_asc_r_des_c_alt.wav";};}stim_341;
+	sound {wavefile {filename = "0342_l_asc_r_des_c_des.wav";};}stim_342;
+	sound {wavefile {filename = "0343_l_alt_r_des_c_asc.wav";};}stim_343;
+	sound {wavefile {filename = "0344_l_alt_r_des_c_alt.wav";};}stim_344;
+	sound {wavefile {filename = "0345_l_alt_r_des_c_asc.wav";};}stim_345; 
+	sound {wavefile {filename = "0346_l_alt_r_des_c_des.wav";};}stim_346;
+	sound {wavefile {filename = "0347_l_alt_r_des_c_alt.wav";};}stim_347;
+	sound {wavefile {filename = "0348_l_alt_r_des_c_des.wav";};}stim_348;
+	sound {wavefile {filename = "0349_l_alt_r_des_c_asc.wav";};}stim_349;
+	sound {wavefile {filename = "0350_l_alt_r_des_c_alt.wav";};}stim_350;
+	sound {wavefile {filename = "0351_l_alt_r_des_c_asc.wav";};}stim_351;
+	sound {wavefile {filename = "0352_l_alt_r_des_c_des.wav";};}stim_352;
+	sound {wavefile {filename = "0353_l_alt_r_des_c_alt.wav";};}stim_353;
+	sound {wavefile {filename = "0354_l_alt_r_des_c_des.wav";};}stim_354;
+	sound {wavefile {filename = "0355_l_asc_r_des_c_asc.wav";};}stim_355;
+	sound {wavefile {filename = "0356_l_asc_r_des_c_alt.wav";};}stim_356;
+	sound {wavefile {filename = "0357_l_asc_r_des_c_asc.wav";};}stim_357;
+	sound {wavefile {filename = "0358_l_asc_r_des_c_des.wav";};}stim_358;
+	sound {wavefile {filename = "0359_l_asc_r_des_c_alt.wav";};}stim_359;
+	sound {wavefile {filename = "0360_l_asc_r_des_c_des.wav";};}stim_360;
+	sound {wavefile {filename = "0361_l_des_r_des_c_asc.wav";};}stim_361;
+	sound {wavefile {filename = "0362_l_des_r_des_c_alt.wav";};}stim_362;
+	sound {wavefile {filename = "0363_l_des_r_des_c_asc.wav";};}stim_363;
+	sound {wavefile {filename = "0364_l_des_r_des_c_des.wav";};}stim_364;
+	sound {wavefile {filename = "0365_l_des_r_des_c_alt.wav";};}stim_365;
+	sound {wavefile {filename = "0366_l_des_r_des_c_des.wav";};}stim_366;
+	sound {wavefile {filename = "0367_l_des_r_des_c_asc.wav";};}stim_367;
+	sound {wavefile {filename = "0368_l_des_r_des_c_alt.wav";};}stim_368;
+	sound {wavefile {filename = "0369_l_des_r_des_c_asc.wav";};}stim_369;
+	sound {wavefile {filename = "0370_l_des_r_des_c_des.wav";};}stim_370;
+	sound {wavefile {filename = "0371_l_des_r_des_c_alt.wav";};}stim_371;
+	sound {wavefile {filename = "0372_l_des_r_des_c_des.wav";};}stim_372;
+	sound {wavefile {filename = "0373_l_des_r_des_c_asc.wav";};}stim_373;
+	sound {wavefile {filename = "0374_l_des_r_des_c_alt.wav";};}stim_374;
+	sound {wavefile {filename = "0375_l_des_r_des_c_asc.wav";};}stim_375;
+	sound {wavefile {filename = "0376_l_des_r_des_c_des.wav";};}stim_376;
+	sound {wavefile {filename = "0377_l_des_r_des_c_alt.wav";};}stim_377;
+	sound {wavefile {filename = "0378_l_des_r_des_c_des.wav";};}stim_378;
+	sound {wavefile {filename = "0379_l_asc_r_des_c_asc.wav";};}stim_379;
+	sound {wavefile {filename = "0380_l_asc_r_des_c_alt.wav";};}stim_380;
+	sound {wavefile {filename = "0381_l_asc_r_des_c_asc.wav";};}stim_381;
+	sound {wavefile {filename = "0382_l_asc_r_des_c_des.wav";};}stim_382;
+	sound {wavefile {filename = "0383_l_asc_r_des_c_alt.wav";};}stim_383;
+	sound {wavefile {filename = "0384_l_asc_r_des_c_des.wav";};}stim_384;
+	sound {wavefile {filename = "0385_l_alt_r_des_c_asc.wav";};}stim_385;
+	sound {wavefile {filename = "0386_l_alt_r_des_c_alt.wav";};}stim_386;
+	sound {wavefile {filename = "0387_l_alt_r_des_c_asc.wav";};}stim_387;
+	sound {wavefile {filename = "0388_l_alt_r_des_c_des.wav";};}stim_388;
+	sound {wavefile {filename = "0389_l_alt_r_des_c_alt.wav";};}stim_389;
+	sound {wavefile {filename = "0390_l_alt_r_des_c_des.wav";};}stim_390;
+	sound {wavefile {filename = "0391_l_asc_r_des_c_asc.wav";};}stim_391;
+	sound {wavefile {filename = "0392_l_asc_r_des_c_alt.wav";};}stim_392;
+	sound {wavefile {filename = "0393_l_asc_r_des_c_asc.wav";};}stim_393;
+	sound {wavefile {filename = "0394_l_asc_r_des_c_des.wav";};}stim_394;
+	sound {wavefile {filename = "0395_l_asc_r_des_c_alt.wav";};}stim_395;
+	sound {wavefile {filename = "0396_l_asc_r_des_c_des.wav";};}stim_396;
+	sound {wavefile {filename = "0397_l_alt_r_des_c_asc.wav";};}stim_397;
+	sound {wavefile {filename = "0398_l_alt_r_des_c_alt.wav";};}stim_398;
+	sound {wavefile {filename = "0399_l_alt_r_des_c_asc.wav";};}stim_399;
+	sound {wavefile {filename = "0400_l_alt_r_des_c_des.wav";};}stim_400;
+   sound {wavefile {filename = "0401_l_alt_r_des_c_alt.wav";};}stim_401;
+	sound {wavefile {filename = "0402_l_alt_r_des_c_des.wav";};}stim_402;
+	sound {wavefile {filename = "0403_l_alt_r_des_c_asc.wav";};}stim_403;
+	sound {wavefile {filename = "0404_l_alt_r_des_c_alt.wav";};}stim_404;
+	sound {wavefile {filename = "0405_l_alt_r_des_c_asc.wav";};}stim_405;
+	sound {wavefile {filename = "0406_l_alt_r_des_c_des.wav";};}stim_406;
+	sound {wavefile {filename = "0407_l_alt_r_des_c_alt.wav";};}stim_407;
+	sound {wavefile {filename = "0408_l_alt_r_des_c_des.wav";};}stim_408;
+	sound {wavefile {filename = "0409_l_asc_r_des_c_asc.wav";};}stim_409;
+	sound {wavefile {filename = "0410_l_asc_r_des_c_alt.wav";};}stim_410;
+	sound {wavefile {filename = "0411_l_asc_r_des_c_asc.wav";};}stim_411;
+	sound {wavefile {filename = "0412_l_asc_r_des_c_des.wav";};}stim_412;
+	sound {wavefile {filename = "0413_l_asc_r_des_c_alt.wav";};}stim_413;
+	sound {wavefile {filename = "0414_l_asc_r_des_c_des.wav";};}stim_414;
+	sound {wavefile {filename = "0415_l_des_r_des_c_asc.wav";};}stim_415;
+	sound {wavefile {filename = "0416_l_des_r_des_c_alt.wav";};}stim_416;
+	sound {wavefile {filename = "0417_l_des_r_des_c_asc.wav";};}stim_417;
+	sound {wavefile {filename = "0418_l_des_r_des_c_des.wav";};}stim_418;
+	sound {wavefile {filename = "0419_l_des_r_des_c_alt.wav";};}stim_419;
+	sound {wavefile {filename = "0420_l_des_r_des_c_des.wav";};}stim_420;
+	sound {wavefile {filename = "0421_l_des_r_des_c_asc.wav";};}stim_421;
+	sound {wavefile {filename = "0422_l_des_r_des_c_alt.wav";};}stim_422;
+	sound {wavefile {filename = "0423_l_des_r_des_c_asc.wav";};}stim_423;
+	sound {wavefile {filename = "0424_l_des_r_des_c_des.wav";};}stim_424;
+	sound {wavefile {filename = "0425_l_des_r_des_c_alt.wav";};}stim_425;
+	sound {wavefile {filename = "0426_l_des_r_des_c_des.wav";};}stim_426;
+	sound {wavefile {filename = "0427_l_des_r_des_c_asc.wav";};}stim_427;
+	sound {wavefile {filename = "0428_l_des_r_des_c_alt.wav";};}stim_428;
+	sound {wavefile {filename = "0429_l_des_r_des_c_asc.wav";};}stim_429;
+	sound {wavefile {filename = "0430_l_des_r_des_c_des.wav";};}stim_430;
+	sound {wavefile {filename = "0431_l_des_r_des_c_alt.wav";};}stim_431;
+	sound {wavefile {filename = "0432_l_des_r_des_c_des.wav";};}stim_432;
+	sound {wavefile {filename = "0433_l_asc_r_des_c_asc.wav";};}stim_433;
+	sound {wavefile {filename = "0434_l_asc_r_des_c_alt.wav";};}stim_434;
+	sound {wavefile {filename = "0435_l_asc_r_des_c_asc.wav";};}stim_435;
+	sound {wavefile {filename = "0436_l_asc_r_des_c_des.wav";};}stim_436;
+	sound {wavefile {filename = "0437_l_asc_r_des_c_alt.wav";};}stim_437;
+	sound {wavefile {filename = "0438_l_asc_r_des_c_des.wav";};}stim_438;
+	sound {wavefile {filename = "0439_l_alt_r_des_c_asc.wav";};}stim_439;
+	sound {wavefile {filename = "0440_l_alt_r_des_c_alt.wav";};}stim_440;
+	sound {wavefile {filename = "0441_l_alt_r_des_c_asc.wav";};}stim_441;
+	sound {wavefile {filename = "0442_l_alt_r_des_c_des.wav";};}stim_442;
+	sound {wavefile {filename = "0443_l_alt_r_des_c_alt.wav";};}stim_443;
+	sound {wavefile {filename = "0444_l_alt_r_des_c_des.wav";};}stim_444;
+	sound {wavefile {filename = "0445_l_asc_r_des_c_asc.wav";};}stim_445;
+	sound {wavefile {filename = "0446_l_asc_r_des_c_alt.wav";};}stim_446;
+	sound {wavefile {filename = "0447_l_asc_r_des_c_asc.wav";};}stim_447;
+	sound {wavefile {filename = "0448_l_asc_r_des_c_des.wav";};}stim_448;
+	sound {wavefile {filename = "0449_l_asc_r_des_c_alt.wav";};}stim_449;
+	sound {wavefile {filename = "0450_l_asc_r_des_c_des.wav";};}stim_450;
+	sound {wavefile {filename = "0451_l_alt_r_des_c_asc.wav";};}stim_451;
+	sound {wavefile {filename = "0452_l_alt_r_des_c_alt.wav";};}stim_452;
+	sound {wavefile {filename = "0453_l_alt_r_des_c_asc.wav";};}stim_453;
+	sound {wavefile {filename = "0454_l_alt_r_des_c_des.wav";};}stim_454;
+	sound {wavefile {filename = "0455_l_alt_r_des_c_alt.wav";};}stim_455;
+	sound {wavefile {filename = "0456_l_alt_r_des_c_des.wav";};}stim_456;
+	sound {wavefile {filename = "0457_l_alt_r_des_c_asc.wav";};}stim_457;
+	sound {wavefile {filename = "0458_l_alt_r_des_c_alt.wav";};}stim_458;
+	sound {wavefile {filename = "0459_l_alt_r_des_c_asc.wav";};}stim_459;
+	sound {wavefile {filename = "0460_l_alt_r_des_c_des.wav";};}stim_460;
+	sound {wavefile {filename = "0461_l_alt_r_des_c_alt.wav";};}stim_461;
+	sound {wavefile {filename = "0462_l_alt_r_des_c_des.wav";};}stim_462;
+	sound {wavefile {filename = "0463_l_asc_r_des_c_asc.wav";};}stim_463;
+	sound {wavefile {filename = "0464_l_asc_r_des_c_alt.wav";};}stim_464;
+	sound {wavefile {filename = "0465_l_asc_r_des_c_asc.wav";};}stim_465;
+	sound {wavefile {filename = "0466_l_asc_r_des_c_des.wav";};}stim_466;
+	sound {wavefile {filename = "0467_l_asc_r_des_c_alt.wav";};}stim_467;
+	sound {wavefile {filename = "0468_l_asc_r_des_c_des.wav";};}stim_468;
+	sound {wavefile {filename = "0469_l_des_r_des_c_asc.wav";};}stim_469;
+	sound {wavefile {filename = "0470_l_des_r_des_c_alt.wav";};}stim_470;
+	sound {wavefile {filename = "0471_l_des_r_des_c_asc.wav";};}stim_471;
+	sound {wavefile {filename = "0472_l_des_r_des_c_des.wav";};}stim_472;
+	sound {wavefile {filename = "0473_l_des_r_des_c_alt.wav";};}stim_473;
+	sound {wavefile {filename = "0474_l_des_r_des_c_des.wav";};}stim_474;
+	sound {wavefile {filename = "0475_l_des_r_des_c_asc.wav";};}stim_475;
+	sound {wavefile {filename = "0476_l_des_r_des_c_alt.wav";};}stim_476;
+	sound {wavefile {filename = "0477_l_des_r_des_c_asc.wav";};}stim_477;
+	sound {wavefile {filename = "0478_l_des_r_des_c_des.wav";};}stim_478;
+	sound {wavefile {filename = "0479_l_des_r_des_c_alt.wav";};}stim_479;
+	sound {wavefile {filename = "0480_l_des_r_des_c_des.wav";};}stim_480;
+	sound {wavefile {filename = "0481_l_des_r_des_c_asc.wav";};}stim_481;
+	sound {wavefile {filename = "0482_l_des_r_des_c_alt.wav";};}stim_482;
+	sound {wavefile {filename = "0483_l_des_r_des_c_asc.wav";};}stim_483;
+	sound {wavefile {filename = "0484_l_des_r_des_c_des.wav";};}stim_484;
+	sound {wavefile {filename = "0485_l_des_r_des_c_alt.wav";};}stim_485;
+	sound {wavefile {filename = "0486_l_des_r_des_c_des.wav";};}stim_486;
+}stimuli;
+
+
+# picture declarations:
+# for preparation
+picture{
+	bitmap{filename = "auditory_fixation.tiff";} fix_mark1;
+	x = 0; y = 0;
+} pic_prep;
+
+# for cue
+picture{
+	bitmap my_cue;
+	x = 0; y = 0; 
+} pic_cue;
+
+# for wait
+picture{
+	bitmap{filename = "auditory_fixation.tiff";} fix_mark2;
+	x = 0; y = 0;
+} pic_wait;
+
+# for present
+picture{
+	bitmap{filename = "auditory_fixation.tiff";} fix_mark3;
+	x = 0; y = 0;
+} pic_present;
+
+# for response
+picture{
+	text{caption = "Lorem Ipsum"; font_size = 32; height = 20;} text_response_question;
+	x = 0; y = 0;
+	text{caption = "Enter '8' for Ascending, '5' for Alternating and '2' for Descending,"; font_size = 24;  height = 20;} text_response_options;
+	x = 0; y = -300;
+} pic_response;
+
+# trial declarations:
+# main trial 
+trial {
+	# ignore unintended response
+	all_responses = false;
+	# preparation (1000 ms)
+	stimulus_event{
+		picture pic_prep;
+		time = 0;
+		code = "prep";
+	} stim_prep;
+	
+	# cue (1000 ms)
+	stimulus_event{
+		picture pic_cue;
+		code = "cue";
+		time = 993;
+	} stim_cue;
+	
+	# wait (600 ms)
+	stimulus_event{
+		picture pic_wait;
+		time = 1993;
+		code = "wait";
+	} stim_wait;
+		
+	# present (3000 ms)
+	picture pic_present; 		# fixation
+	time = 2593;
+	stimulus_event{
+		sound stim_1;
+		code = "default";
+		time = 2593;
+	} stim_present;
+} main_trial;
+
+# response trial 
+trial{
+	trial_duration = 1500;
+	trial_type = first_response;
+	all_responses = false;
+	# response (1500 ms)
+	stimulus_event{
+		picture pic_response;
+		code = "response";
+		response_active = true; 
+	} stim_response;
+} response_trial;
+
+# feedback trial
+trial{
+	trial_duration = 1000;
+	picture{
+		text{caption =""; font_size =40;} text_feedback;
+		x = 0; y = 0;
+	} pic_feedback;
+} feedback_trial;
+
+# insructions trial
+trial{
+	trial_duration = 1000;	
+	# ignore unintended response
+	all_responses = false;
+	stimulus_event{
+		picture {
+			text{caption = ""; font_size = 48; max_text_width = 1000;} text_instruction;
+			x = 0; y = 0;
+		} pic_intructions;
+	} stim_instruction;
+} instructions;
+
+# begin trial
+trial{
+	trial_duration = forever;	
+	trial_type = first_response;
+	stimulus_event{
+		picture {
+			text{caption = ""; font_size = 40; height = 20;} begin_text1;
+			x = 0; y = 0;
+			text{caption = "Enter '5' to start"; font_size = 24;  height = 20;} begin_text2;
+			x = 0; y = -300;
+		} pic_begin;
+		target_button = 2;
+		code = "session start";
+	} stim_begin;
+} begin_experiment;
+
+
+#%% PCL ------------------------------
+begin_pcl;
+
+# array to store the file number 
+array <int> file_number[stimuli.count()];
+# fill the array from 1 to 486
+file_number.fill(1, stimuli.count(),1,1);
+# number of trials
+int total_trials = 150;
+int one_trial = total_trials / cue_text.count();
+# array for left and right trial sequence  [to deterine whether to attend left or right audio stim]
+array <int> trial_sequence[0];
+
+# creating trial sequence 
+# loop over cue
+loop int iCue=1 until iCue>cue_text.count()
+begin
+	# loop over half trials
+	loop int iTrial=1 until iTrial>one_trial
+	begin
+		trial_sequence.add(iCue);
+		iTrial = iTrial + 1;
+	end; 
+	iCue = iCue + 1;
+end;
+
+
+# randomisation
+# radomising files (random picking of stimuli)
+file_number.shuffle();
+# randomising trial sequence (random picking of attended position)
+trial_sequence.shuffle();
+
+
+#  array for left auido ('1' for ascending; '2' for alternaing; '3' for descending)
+array <int> codeL[486] = {1,1,1,1,1,1,3,3,3,3,3,3,1,1,1,1,1,1,3,3,3,3,3,3,3,3,3,3,3,3,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+								1,1,1,1,1,1,3,3,3,3,3,3,1,1,1,1,1,1,3,3,3,3,3,3,3,3,3,3,3,3,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+								1,1,1,1,1,3,3,3,3,3,3,1,1,1,1,1,1,3,3,3,3,3,3,3,3,3,3,3,3,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,
+								1,1,1,1,3,3,3,3,3,3,1,1,1,1,1,1,3,3,3,3,3,3,3,3,3,3,3,3,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,
+								1,1,1,3,3,3,3,3,3,1,1,1,1,1,1,3,3,3,3,3,3,3,3,3,3,3,3,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,
+								1,1,3,3,3,3,3,3,1,1,1,1,1,1,3,3,3,3,3,3,3,3,3,3,3,3,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,
+								1,3,3,3,3,3,3,1,1,1,1,1,1,3,3,3,3,3,3,3,3,3,3,3,3,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,
+								3,3,3,3,3,3,1,1,1,1,1,1,3,3,3,3,3,3,3,3,3,3,3,3,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,3,
+								3,3,3,3,3,1,1,1,1,1,1,3,3,3,3,3,3,3,3,3,3,3,3,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2};
+#  array for right auido ('1' for ascending; '2' for alternaing; '3' for descending)
+array <int> codeR[486] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,
+								3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,1,1,1,
+								1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,3,3,
+								3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+								3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,1,1,1,1,1,1,1,1,1,
+								1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,
+								2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+								2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+								2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2};
+
+# Note: numbers are arranged based on the files in the folder
+
+
+# temp var for the sub routine
+string cue;				# for cue condition
+string type;			# for audio type(string)
+int sound_type;		# for audio type(int) 
+
+# subroutine
+sub run_trial(int trial_index) 
+begin 
+	# check the cue condition is left
+	if trial_sequence[trial_index] == 1 then
+		# set cue as left
+		pic_cue.set_part(1, cue_text[1]);
+		# set cue event code
+		stim_cue.set_event_code("left_cue");
+		# set sound type
+		sound_type = codeL[file_number[trial_index]];
+		cue = "left_";
+		text_response_question.set_caption("Left audio was ascending or alternating or descending?", true);
+	# check the cue condition is right
+	else
+		# set cue as right
+		pic_cue.set_part(1, cue_text[2]);
+		# set cue event code
+		stim_cue.set_event_code("right_cue");
+		# set sound type
+		sound_type = codeR[file_number[trial_index]];
+		cue = "right_";
+		text_response_question.set_caption("Right audio was ascending or alternating or descending?", true);
+	end;
+	
+	# set target buttons based on sound_type
+	if sound_type == 1 then
+		type = "asc_";
+		stim_response.set_target_button(1);
+	elseif sound_type == 2 then
+		type = "dec_";
+		stim_response.set_target_button(3);
+	else
+		type = "alt_";
+		stim_response.set_target_button(2);
+	end;
+		
+	# set preset stimulus
+	stim_present.set_stimulus(stimuli[file_number[trial_index]]);
+	# set present stimulus event code
+	stim_present.set_event_code(cue + type + string(file_number[trial_index]));
+	
+	# present main trial
+	main_trial.present();
+	response_trial.present();
+end;
+
+
+# main run --
+
+# welcome screen 
+text_instruction.set_caption("Welcome", true);
+instructions.present();
+# general description screen 
+text_instruction.set_font_size(24);
+text_instruction.set_caption("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", true);
+instructions.set_duration(3000);
+instructions.present();
+
+# training session
+# training session pause
+begin_text1.set_caption("Training Session", true);
+stim_begin.set_event_code("Trial Session");
+begin_experiment.present();
+
+# training trials
+int training_trials = 10;
+# loop over training files
+loop int iRun=1 until iRun>training_trials
+begin
+	run_trial(iRun);
+	# feedback
+	string new_caption;
+	# checking if the response was correct
+	stimulus_data last = stimulus_manager.last_stimulus_data();
+	if(last.type()==last.HIT) then
+		#text_feedback.set_font_color(0,255,0);
+		text_feedback.set_caption("Correct", true);
+	elseif(last.type()==last.MISS) then
+		#text_feedback.set_font_color(255,255,0);
+		text_feedback.set_caption("Missed", true);
+	elseif(last.type()==last.INCORRECT) then
+		#text_feedback.set_font_color(255,0,0);
+		text_feedback.set_caption("Incorrect", true);
+	end;
+	# run feedback trial
+	feedback_trial.present();
+	iRun = iRun + 1;
+end;
+
+# training session end screen
+text_instruction.set_font_size(24);
+text_instruction.set_caption("End of training session", true);
+instructions.present();
+
+# experiment session pause
+begin_text1.set_caption("Experiment Session", true);
+stim_begin.set_event_code("Experiment Session");
+begin_experiment.present();
+# experiment session
+loop int iRun=1 until iRun>total_trials
+begin
+	run_trial(iRun);
+	iRun = iRun + 1;
+end;
+
+
+# end screen 
+text_instruction.set_font_size(48);
+text_instruction.set_caption("Thank you for participating", true);
+instructions.present();
+
+
+
