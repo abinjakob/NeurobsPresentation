@@ -183,15 +183,18 @@ catch_sequence.shuffle();
 
 # stimulus intervals for left (11.9 Hz) and right stimulus (10 Hz)
 # interval = 1000/ [reqd. frequency * refresh period (16.7 ms)] 
-array <int> stim_interval[] = {5, 6};		
+array <int> STIM_INTERVAL[] = {5, 6};
+array <int> stim_interval[2];	
 # within stim interval period where stim is 'ON' for left (11.9 Hz) and right stimulus (10 Hz)
-array  <int> stim_on_period[] = {2,3};	
+array  <int> STIM_ON_PERIOD[] = {2,3};	
+array  <int> stim_on_period[2];
 # counter for coordinating 'ON' and 'OFF' events
 array <int> count[] = {0,0};
 
 # catch trials parameters (slowing down flicker)
-array <int> stim_interval_catch[2][2] = {{13, 6}, {5, 13}};     # 4.6 Hz
+array <int> STIM_INTERVAL_CATCH[2][2] = {{13, 6}, {5, 13}};     # 4.6 Hz
 # array <int> stim_interval_catch[2][2] = {{7, 6}, {5, 7}};		 # 8.5 Hz
+array <int> stim_interval_catch[2][2];
 int catch_count = 0;
 
 
@@ -285,6 +288,24 @@ instructions.present();
 # loop over trial_sequence
 loop int iTrial=1 until iTrial>trial_sequence.count()
 begin
+	
+	# counter balancing frequencies appearing on right and left
+	if random(1,2) == 1 then
+		stim_interval[1]  = STIM_INTERVAL[1];
+		stim_interval[2]  = STIM_INTERVAL[2];
+		stim_on_period[1] = STIM_ON_PERIOD[1];
+		stim_on_period[2] = STIM_ON_PERIOD[2];
+		stim_interval_catch[1] = STIM_INTERVAL_CATCH[1];
+		stim_interval_catch[2] = STIM_INTERVAL_CATCH[2];
+	else
+		stim_interval[1]  = STIM_INTERVAL[2];
+		stim_interval[2]  = STIM_INTERVAL[1];
+		stim_on_period[1] = STIM_ON_PERIOD[2];
+		stim_on_period[2] = STIM_ON_PERIOD[1];
+		stim_interval_catch[1] = STIM_INTERVAL_CATCH[2];
+		stim_interval_catch[2] = STIM_INTERVAL_CATCH[1];
+	end;
+	
 	# if catch trial
 	if catch_sequence[iTrial] == 1 then
 		# check trial condition
@@ -355,3 +376,5 @@ end;
 text_instruction.set_font_size(48);
 text_instruction.set_caption("Thank you for participating", true);
 instructions.present();
+
+
