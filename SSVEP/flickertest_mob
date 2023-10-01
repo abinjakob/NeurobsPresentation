@@ -1,0 +1,419 @@
+#%% HEADER ---------------------------
+
+# Description:
+# The FlickerTest program is employed to assess the minimum frequency 
+# difference that a participant can detect. This can be used to decide
+# the frequency for the catch trials.
+# Trial Design: Preparation (1000ms), Flicker presentation (4000ms) 
+# response period (1500ms) and ITI (1000ms to 2500ms)
+# # interval = 1000/ [reqd. frequency * refresh period (16.7 ms)]
+# 
+# Abin Jacob 
+# 22/09/2023
+
+# header parameters 
+response_matching = simple_matching;
+active_buttons = 2;
+# ignore loggin unintended responses
+response_logging = log_active;
+
+
+
+#%% SDL ------------------------------
+begin;
+
+# stimulus boxes
+box{width = 400; height = 320; color= 255,255,255;} box_on;
+box{width = 400; height = 320; color= 0,0,0;} box_off;
+
+# picture declarations:
+# fixation mark
+picture{
+	bitmap{filename = "flickertest_fixation.tiff";} fix_mark1;
+	x = 0; y = 0;
+} pic_fixation;
+
+# for response 
+picture{
+	text{caption = "Did the stimulus change speed?"; font_size = 32;} text_response;
+	x = 0; y = 0;
+	text{caption = "Yes"; width = 200; height = 50; background_color = 0, 255, 0;font_size = 24;} text_yes;
+	x = -300; y = -300;
+	text{caption = "No"; width = 200; height = 50; background_color = 255, 0, 0; font_size = 24;} text_no;
+	x = 300; y = -300;
+} pic_response; 
+
+
+# trial declarations 
+# for fixation
+trial {
+	trial_duration = 993;
+	# ignore unintended response
+	all_responses = false;
+	# preparation
+	stimulus_event{
+		picture pic_fixation;
+		time = 0;
+		code = "";
+	} stim_prep;
+} pre_trial;
+
+# for flicker stim
+trial{	
+	# ignore unintended response
+	all_responses = false;
+	# flicker
+	stimulus_event{
+		picture{
+			# flicker box
+			box box_off;				
+			x = 0; y = 0;
+		} pic_flicker;
+		code = "stim";
+	}stim_flicker;
+} flicker_trial;
+
+# for response 
+trial{
+	# trial properties
+	trial_duration = 1500;
+	trial_type = first_response;
+	all_responses = false;
+	
+	stimulus_event{
+		picture pic_response;
+		#time = 500;
+		code = "response";
+		response_active = true;
+	} stim_response;
+} response_trial;
+
+# insructions trial
+trial{
+	trial_duration = 1000;	
+	# ignore unintended response
+	all_responses = false;
+	stimulus_event{
+		picture {
+			text{caption = ""; font_size = 48; max_text_width = 1000;} text_instruction;
+			x = 0; y = 0;
+		} pic_intructions;
+	} stim_instruction;
+} instructions;
+
+# begin trial
+trial{
+	trial_duration = forever;	
+	trial_type = first_response;
+	stimulus_event{
+		picture {
+			text{caption = ""; font_size = 40; height = 20;} begin_text1;
+			x = 0; y = 0;
+			text{caption = "Start"; width = 200; height = 50; background_color = 0, 255, 0;font_size = 24;} text_begin;
+			x = 0; y = -300;
+		} pic_begin;
+		target_button = 1;
+		code = "session start";
+	} stim_begin;
+} begin_experiment;
+
+
+
+#%% PCL ------------------------------
+begin_pcl;
+
+# parameters
+# total number of trials 
+int total_trials = 10;
+# flicker duration (ms)
+int flicker_duration = 4000;
+# stim interval
+array <int> stim_interval[1];
+# stim on period
+array <int> stim_on_period[1];
+# catch stim interval
+array <int> stim_interval_catch[1];
+int catch_count = 0;
+# counter for coordinating 'ON' and 'OFF' events
+array <int> count[1] = {0};
+
+# array for trial and catch trial sequence
+array <int> catch_sequence[total_trials];
+int catch_reps; 
+
+# sub routine for random catch sequence
+sub catch
+begin
+	# empty array filled with '0' 
+	catch_sequence.fill(1,catch_sequence.count(),0,0);
+	catch_reps = random(4,5);
+	# creating trial and catch trial sequence
+	loop int iTrial = 1 until iTrial>catch_sequence.count()
+	begin
+		catch_sequence[iTrial] = 1;
+		iTrial = iTrial + catch_reps;
+	end;
+	# randomising catch sequence
+	catch_sequence.shuffle();
+end;
+
+# sub routine for the flicker effect
+sub flicker
+begin
+	# initialising event code
+	string event_code = "stim-";
+	# loop over left and right stim
+	loop int iStim=1 until iStim>pic_flicker.part_count()
+	begin 
+		# iterating counter
+		count[iStim] = count[iStim] + 1;		
+		# controlling the stim on period
+		if count[iStim] <= stim_on_period[iStim] then
+			pic_flicker.set_part(iStim, box_on);
+			event_code = event_code + "1";
+		else 
+			pic_flicker.set_part(iStim, box_off);
+			event_code = event_code + "0";
+		end;		
+		# controlling the stim period
+		if count[iStim] >= stim_interval[iStim] then
+			# reset count
+			count[iStim] = 0;
+		end;
+		iStim = iStim + 1;
+	end;
+	# set event code
+	stim_flicker.set_event_code(event_code);
+	# running flicker trial
+	flicker_trial.present();
+end;
+
+
+# sub routine for the flicker catch trials
+sub flicker_catch
+begin
+	# initialising event code
+	#catch_count = 0;
+	string event_code = "catch-";
+	# loop over left and right stim
+	loop int iStim=1 until iStim>pic_flicker.part_count()
+	begin 
+		# iterating counter
+		count[iStim] = count[iStim] + 1;		
+		# controlling the stim on period
+		if count[iStim] <= stim_on_period[iStim] then
+			pic_flicker.set_part(iStim, box_on);
+			event_code = event_code + "1";
+		else 
+			pic_flicker.set_part(iStim, box_off);  
+			event_code = event_code + "0";
+		end;		
+		if catch_count < 150 then
+			# controlling the stim period
+			if count[iStim] == stim_interval[iStim] then
+				# reset count
+				count[iStim] = 0;
+			end;
+		else
+			# controlling the stim period
+			if count[iStim] == stim_interval_catch[iStim] then
+				# reset count
+				count[iStim] = 0;
+			end;
+		end;
+		# iterate counter for changing catch trial frequency of stim
+		catch_count = catch_count + 1;
+		iStim = iStim + 1;
+	end;
+	# set event code
+	stim_flicker.set_event_code(event_code);
+	# running flicker trial
+	flicker_trial.present();
+end;
+
+sub run
+begin
+	# trial screens
+	# loop over trial_sequence
+	loop int iTrial=1 until iTrial>total_trials
+	begin 
+		# if catch trial
+		if catch_sequence[iTrial] == 1 then 	
+			# set event code for prep 
+			stim_prep.set_event_code("Catch");
+			# running pre trial
+			pre_trial.present();	
+			# running flicker trial with catch
+			loop int start_time=clock.time() until clock.time()>=start_time + flicker_duration 
+			begin
+				# running subroutine
+				flicker_catch();
+			end;		
+			# setting response trial event code 
+			stim_response.set_event_code("catch_response");
+			# setting response trial target button to 'Y'
+			stim_response.set_target_button(1);		
+			
+		# if normal flicker trial	
+		else
+			# set event code for prep 
+			stim_prep.set_event_code("Normal");
+			# running pre trial
+			pre_trial.present();		
+			# running flicker trial normally 
+			loop int start_time=clock.time() until clock.time()>=start_time + flicker_duration
+			begin
+				# running subroutine
+				flicker();
+			end;	
+			# setting response trial event code 
+			stim_response.set_event_code("response");
+			# setting response trial target button to 'N'
+			stim_response.set_target_button(2);
+		end;	
+		# reset catch counter
+		catch_count = 0;
+		# running response trial;
+		response_trial.present();	
+		# trial iterate
+		iTrial = iTrial + 1;
+	end;
+end;
+
+
+
+# main run ---
+# interval = 1000/ [reqd. frequency * refresh period (16.7 ms)] 
+
+# welcome screen 
+text_instruction.set_caption("Welcome", true);
+instructions.present();
+# general description screen 
+text_instruction.set_font_size(24);
+text_instruction.set_caption("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", true);
+instructions.set_duration(3000);
+instructions.present();
+
+
+# 10 HZ
+
+# SESSION 01
+# Flicker = 10Hz | Catch = 8.57Hz
+# parametres 
+stim_interval[1] = 6;
+stim_on_period[1] = 3;
+stim_interval_catch[1] = 7;
+# catch sequence
+catch();
+# Session Start
+begin_text1.set_caption("Session 1", true);
+stim_begin.set_event_code("Session 1: 10 & 8.57");
+begin_experiment.present();
+# run session
+run();
+
+
+# SESSION 02
+# Flicker = 10Hz | Catch = 7.48Hz
+# parametres 
+stim_interval[1] = 6;
+stim_on_period[1] = 3;
+stim_interval_catch[1] = 8;
+# catch sequence
+catch();
+# Session Start
+begin_text1.set_caption("Session 2", true);
+stim_begin.set_event_code("Session 2: 10 & 7.48");
+begin_experiment.present();
+# run session
+run();
+
+
+# SESSION 03
+# Flicker = 10Hz | Catch = 6.66Hz
+# parametres 
+stim_interval[1] = 6;
+stim_on_period[1] = 3;
+stim_interval_catch[1] = 9;
+# catch sequence
+catch();
+# Session Start
+begin_text1.set_caption("Session 3", true);
+stim_begin.set_event_code("Session 3: 10 & 6.66");
+begin_experiment.present();
+# run session
+run();
+
+
+# 8.57 HZ
+
+# SESSION 04
+# Flicker = 8.57Hz | Catch = 6.66Hz
+# parametres 
+stim_interval[1] = 7;
+stim_on_period[1] = 3;
+stim_interval_catch[1] = 9;
+# catch sequence
+catch();
+# Session Start
+begin_text1.set_caption("Session 4", true);
+stim_begin.set_event_code("Session 4: 8.57 & 6.66");
+begin_experiment.present();
+# run session
+run();
+
+
+# SESSION 05
+# Flicker = 8.57Hz | Catch = 7.48Hz
+# parametres 
+stim_interval[1] = 7;
+stim_on_period[1] = 3;
+stim_interval_catch[1] = 8;
+# catch sequence
+catch();
+# Session Start
+begin_text1.set_caption("Session 5", true);
+stim_begin.set_event_code("Session 5: 8.57 & 7.48");
+begin_experiment.present();
+# run session
+run();
+
+
+# 15 HZ
+
+# SESSION 06
+# Flicker = 15Hz | Catch = 11.9Hz
+# parametres 
+stim_interval[1] = 4;
+stim_on_period[1] = 2;
+stim_interval_catch[1] = 5;
+# catch sequence
+catch();
+# Session Start
+begin_text1.set_caption("Session 6", true);
+stim_begin.set_event_code("Session 6: 15 & 11.9");
+begin_experiment.present();
+# run session
+run();
+
+
+# SESSION 07
+# Flicker = 15Hz | Catch = 10Hz
+# parametres 
+stim_interval[1] = 4;
+stim_on_period[1] = 2;
+stim_interval_catch[1] = 6;
+# catch sequence
+catch();
+# Session Start
+begin_text1.set_caption("Session 7", true);
+stim_begin.set_event_code("Session 7: 15 & 10");
+begin_experiment.present();
+# run session
+run();
+
+
+# end screen 
+text_instruction.set_font_size(48);
+text_instruction.set_caption("Thank you for participating", true);
+instructions.present();
