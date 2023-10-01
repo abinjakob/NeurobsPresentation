@@ -372,6 +372,8 @@ begin
 			# setting response trial target button to 'N'
 			stim_response.set_target_button(2);
 		end;	
+		# reset catch counter
+		catch_count = 0;
 		# running response trial;
 		response_trial.present();	
 		# setting ITI duration (random jitter 1s to 2.5s)
