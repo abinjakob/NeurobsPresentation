@@ -23,8 +23,8 @@ response_logging = log_active;
 begin;
 
 # stimulus boxes
-box{width = 800; height = 680; color= 255,255,255;} box_on;
-box{width = 800; height = 680; color= 0,0,0;} box_off;
+box{width = 600; height = 480; color= 255,255,255;} box_on;
+box{width = 600; height = 480; color= 0,0,0;} box_off;
 
 # picture declarations:
 # fixation mark
