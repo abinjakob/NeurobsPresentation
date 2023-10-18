@@ -1,1 +1,166 @@
+% Flicker Test Lofile Analysis 
+% ----------------------------
+% The code basically runs through all the '.log' files in a folder and 
+% analyse the accuracy of Stim and Catch trials. Each .log file must be 
+% for each participants. The logfiles are generated from the Presentation
+% paradigm 'flickertest_mob'. 
+%
+% note: many parts of the code is hardcoded to work for the logfile
+% generated in the format expected from Presentation. Also, it is hardcoded
+% to work for the 'event-codes' inserted while designing the experiment. 
+%
+% the program will then save the final data to the same folder
+%
+% Author: Abin Jacob
+% Date  : 12/10/2023
+
+% start fresh 
+clear;
+clc;
+
+% Specify the folder where the .log files are located
+folderPath = '/Users/abinjacob/Documents/02. NeuroCFN/Research Module/Paradigm/Analysis Codes/Flicker Test';
+
+% List all .log files in the folder
+fileList = dir(fullfile(folderPath, '*.log'));
+
+% Initialize a cell array to store the content of each file
+fileData = cell(1, numel(fileList));
+
+% Loop through each .log file and read its content
+for i = 1:numel(fileList)
+    % Construct the full file path
+    filePath = fullfile(folderPath, fileList(i).name);
+    
+    % Read the content of the file
+    fileNames{i} = filePath;
+end
+
+% store each subjects data
+subject = struct;
+
+for iFile = 1: numel(fileNames)
+    % importing data
+    raw_data = importdata(fileNames{iFile}, '\t');
+    % copying the code column
+    code = raw_data.textdata(4:end, 3);
+    
+    %find block strat indexes
+    block_start_index = [];
+    for idx = 1: numel(code)
+        if startsWith(code{idx}, 'Block')
+            block_start_index = [block_start_index, idx];
+        end 
+    end
+    
+    % create struct for each block
+    % loop across block index
+    for iBlock = 1:numel(block_start_index)
+
+
+        if iBlock == numel(block_start_index)
+            for iTrial = block_start_index(iBlock):numel(code)
+            % Add data for each trial within the current block
+            subject(iFile).block_data(iBlock).block(iTrial - block_start_index(iBlock) + 1).trialData = code{iTrial};
+            end
+        else
+            % loop for block data
+            for iTrial = block_start_index(iBlock):block_start_index(iBlock+1) 
+                % Add data for each trial within the current block
+                subject(iFile).block_data(iBlock).block(iTrial - block_start_index(iBlock) + 1).trialData = code{iTrial};
+            end
+        end
+
+    end
+    
+    % loop over blocks
+    for iBlock = 1:length(subject(iFile).block_data)
+        % initialise counters 
+        catch_correct = 0;
+        catch_wrong   = 0;
+        stim_correct  = 0;
+        stim_wrong    = 0;
+        stim_trials   = 0;
+        catch_trials  = 0;
+        % loop over all trials
+        for idx = 1:length(subject(iFile).block_data(iBlock).block)-1
+            % check for catch trial
+            if strcmp(subject(iFile).block_data(iBlock).block(idx).trialData, 'catch_response')
+                catch_trials = catch_trials + 1;
+                if strcmp(subject(iFile).block_data(iBlock).block(idx+1).trialData, '1')
+                    catch_correct = catch_correct + 1;
+                elseif strcmp(subject(iFile).block_data(iBlock).block(idx+1).trialData, '2')
+                    catch_wrong = catch_wrong + 1;
+                end 
+            % check for stim trial
+            elseif strcmp(subject(iFile).block_data(iBlock).block(idx).trialData, 'response')
+                stim_trials = stim_trials + 1;
+                if strcmp(subject(iFile).block_data(iBlock).block(idx+1).trialData, '1')
+                    stim_wrong = stim_wrong + 1;
+                elseif strcmp(subject(iFile).block_data(iBlock).block(idx+1).trialData, '2')
+                    stim_correct = stim_correct + 1;
+                end 
+            end
+        end
+        subject(iFile).response_data(iBlock).block.catch_trials = catch_trials;
+        subject(iFile).response_data(iBlock).block.catch_correct = catch_correct;
+        subject(iFile).response_data(iBlock).block.catch_wrong = catch_wrong;
+        subject(iFile).response_data(iBlock).block.stim_trials = stim_trials;
+        subject(iFile).response_data(iBlock).block.stim_correct = stim_correct;
+        subject(iFile).response_data(iBlock).block.stim_wrong = stim_wrong;
+    end
+    
+    % calculate accuracy 
+    % Loop over response_data
+    for idx = 1:length(subject(iFile).response_data)    
+        total_correct = subject(iFile).response_data(idx).block.catch_correct + subject(iFile).response_data(idx).block.stim_correct;
+        total_trials = subject(iFile).response_data(idx).block.catch_trials + subject(iFile).response_data(idx).block.stim_trials;
+        subject(iFile).accuracy(idx) = (total_correct / total_trials) * 100;
+    end
+end
+
+% creating accuracy plot
+numSubjects = numel(subject);
+
+% Create a figure
+figure();
+
+% Number of blocks
+numBlocks = numel(subject(1).accuracy);
+x = 1:numBlocks;
+
+% Width of each bar
+barWidth = 0.15;
+
+% Initialize x positions for bars
+xPositions = bsxfun(@plus, x(:), barWidth * (1:numSubjects) - barWidth * (numSubjects + 1) / 2);
+
+% Define a colormap with distinct colors for each subject
+colors = colormap(hsv(numSubjects));
+
+hold on;
+
+for subID = 1:numSubjects
+    for iBlock = 1:numBlocks
+        blocks = ['Block ', num2str(iBlock)];
+        
+        % Plot the bar for the current subject and block with a unique color
+        bar(xPositions(iBlock, subID), subject(subID).accuracy(iBlock), barWidth, 'FaceColor', colors(subID, :));
+    end
+end
+
+hold off;
+
+% Set the x-axis tick positions and labels
+xtickPositions = 1:numBlocks;
+xtickLabels = cellstr(strcat('Block ', arrayfun(@num2str, x, 'UniformOutput', false)));
+set(gca, 'XTick', xtickPositions, 'XTickLabel', xtickLabels);
+
+% Add labels and a title
+ylabel('Accuracy');
+title('Bar Chart of Subject Accuracy');
+
+% Save the struct to a .mat file
+filename = fullfile(folderPath, 'Flickertest_LogAnalysis_struct.mat');
+save(filename, 'subject');
 
