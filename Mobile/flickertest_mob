@@ -76,7 +76,7 @@ trial{
 # for response 
 trial{
 	# trial properties
-	trial_duration = 1500;
+	trial_duration = 2000;
 	trial_type = first_response;
 	all_responses = false;
 	
@@ -101,6 +101,23 @@ trial{
 	} stim_instruction;
 } instructions;
 
+# insructions trial2
+trial{
+	trial_duration = forever;	
+	trial_type = first_response;
+	# ignore unintended response
+	all_responses = false;
+	stimulus_event{
+		picture {
+			text{caption = ""; font_size = 42; max_text_width = 1800;} text_instruction2;
+			x = 0; y = 100;
+			text{caption = "Ok"; width = 400; height = 100; background_color = 72, 72, 72; font_size = 40;} text_instruction2_2;
+			x = 0; y = -400;
+		} pic_intructions2;
+		target_button = 1;
+	} stim_instruction2;
+} instructions2;
+
 # begin trial
 trial{
 	trial_duration = forever;	
@@ -113,7 +130,7 @@ trial{
 			x = 0; y = -300;
 		} pic_begin;
 		target_button = 1;
-		code = "session start";
+		code = "block start";
 	} stim_begin;
 } begin_experiment;
 
@@ -273,6 +290,7 @@ begin
 		end;	
 		# reset catch counter
 		catch_count = 0;
+		count[1] = 0;
 		# running response trial;
 		response_trial.present();	
 		# trial iterate
@@ -286,13 +304,13 @@ end;
 # interval = 1000/ [reqd. frequency * refresh period (16.7 ms)] 
 
 # welcome screen 
-text_instruction.set_caption("Welcome", true);
+text_instruction.set_caption("Welcome to Flicker Test", true);
 instructions.present();
 # general description screen 
-text_instruction.set_font_size(32);
-text_instruction.set_caption("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", true);
-instructions.set_duration(3000);
-instructions.present();
+text_instruction2.set_caption("In this task, you'll see a blinking box that may blink at different speeds. \n\nYour task is to notice if the blinking speed of the box changes while you're watching it.", true);
+instructions2.present();
+text_instruction2.set_caption("Before the boxes appear, you'll see a cross '+' on the screen, which tells you the boxes are about to show up. This helps you concentrate by looking at the cross. When the cross disappears, the flickering boxes will show for 4 seconds. Try not to blink or move your eyes during this time. \n\nAfterward, you'll be asked if the box speed changed. If it did change, tap 'Yes' on the left side of the screen. If it didn't change, tap 'No' on the right side of the screen.", true);
+instructions2.present();
 
 
 # 10 HZ
@@ -306,8 +324,8 @@ stim_interval_catch[1] = 7;
 # catch sequence
 catch();
 # Session Start
-begin_text1.set_caption("Session 1", true);
-stim_begin.set_event_code("Session 1: 10 & 8.57");
+begin_text1.set_caption("Block 1", true);
+stim_begin.set_event_code("Block 1: 10 & 8.57");
 begin_experiment.present();
 # run session
 run();
@@ -322,8 +340,8 @@ stim_interval_catch[1] = 8;
 # catch sequence
 catch();
 # Session Start
-begin_text1.set_caption("Session 2", true);
-stim_begin.set_event_code("Session 2: 10 & 7.48");
+begin_text1.set_caption("Block 2", true);
+stim_begin.set_event_code("Block 2: 10 & 7.48");
 begin_experiment.present();
 # run session
 run();
@@ -338,8 +356,8 @@ stim_interval_catch[1] = 9;
 # catch sequence
 catch();
 # Session Start
-begin_text1.set_caption("Session 3", true);
-stim_begin.set_event_code("Session 3: 10 & 6.66");
+begin_text1.set_caption("Block 3", true);
+stim_begin.set_event_code("Block 3: 10 & 6.66");
 begin_experiment.present();
 # run session
 run();
@@ -356,8 +374,8 @@ stim_interval_catch[1] = 9;
 # catch sequence
 catch();
 # Session Start
-begin_text1.set_caption("Session 4", true);
-stim_begin.set_event_code("Session 4: 8.57 & 6.66");
+begin_text1.set_caption("Block 4", true);
+stim_begin.set_event_code("Block 4: 8.57 & 6.66");
 begin_experiment.present();
 # run session
 run();
@@ -372,8 +390,8 @@ stim_interval_catch[1] = 8;
 # catch sequence
 catch();
 # Session Start
-begin_text1.set_caption("Session 5", true);
-stim_begin.set_event_code("Session 5: 8.57 & 7.48");
+begin_text1.set_caption("Block 5", true);
+stim_begin.set_event_code("Block 5: 8.57 & 7.48");
 begin_experiment.present();
 # run session
 run();
@@ -390,8 +408,8 @@ stim_interval_catch[1] = 5;
 # catch sequence
 catch();
 # Session Start
-begin_text1.set_caption("Session 6", true);
-stim_begin.set_event_code("Session 6: 15 & 11.9");
+begin_text1.set_caption("Block 6", true);
+stim_begin.set_event_code("Block 6: 15 & 11.9");
 begin_experiment.present();
 # run session
 run();
@@ -406,8 +424,8 @@ stim_interval_catch[1] = 6;
 # catch sequence
 catch();
 # Session Start
-begin_text1.set_caption("Session 7", true);
-stim_begin.set_event_code("Session 7: 15 & 10");
+begin_text1.set_caption("Block 7", true);
+stim_begin.set_event_code("Block 7: 15 & 10");
 begin_experiment.present();
 # run session
 run();
@@ -416,4 +434,5 @@ run();
 # end screen 
 text_instruction.set_font_size(48);
 text_instruction.set_caption("Thank you for participating", true);
+instructions.set_duration(3000);
 instructions.present();
