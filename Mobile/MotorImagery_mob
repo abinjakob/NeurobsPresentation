@@ -1,0 +1,298 @@
+#%% HEADER ---------------------------
+#
+# Description:
+# Basic Motor Imagery (MI) Paradigm  
+# This presentation code executes a simple MI paradigm with 
+# left hand and right hand movement and execution commands
+# are shown. No feedback was given.
+#
+# Trial Design: Preparation Phase(1000ms), Cue (1000ms), 
+# ME/I (4000ms) and Rest (3000ms to 6000ms)
+# 1 Session: 40 trials (20 left + 20 right selected randomly)
+# Will have 1 block for execution and 1 block for imagery
+#
+# Abin Jacob 
+# 20/09/2023
+
+# header parameters 
+response_matching = simple_matching;
+# active buttons  
+active_buttons = 1;
+# ignore logging unintended responses
+response_logging = log_active;
+
+
+#%% SDL ------------------------------
+begin;
+
+# array for cues
+array {
+	bitmap{filename = "left_cue.tiff";} my_cue;
+	bitmap{filename = "right_cue.tiff";};
+} cue_image;
+
+# picture declarations:
+# for preparation
+picture{
+	bitmap{filename = "Fixation.tiff";} fix_mark1;
+	x = 0; y = 0;
+} pic_prep;
+
+# for cue
+picture{
+	bitmap my_cue;
+	x = 0; y = 0; 
+	text{caption = "Hello"; font_size = 56;} cue_text;
+	x = 0; y = 200;
+} pic_cue;
+
+# for perform
+picture{
+	bitmap{filename = "Fixation.tiff";} fix_mark2;
+	x = 0; y = 0;
+} pic_perform;
+
+# for rest
+picture{
+	text{caption = ""; font_size = 48;} fix_mark3;
+	x = 0; y = 0;
+} pic_rest;
+
+
+# trial declaration
+# main trial
+trial{
+	trial_duration = 9000;		 # ms
+	
+	# prepration (1000 ms)
+	stimulus_event{
+		picture pic_prep;
+		time = 0;
+		code = "prep";
+	} stim_prep;
+	
+	# cue (1000 ms) 
+	stimulus_event{
+		picture pic_cue;
+		time = 993;
+		code = "cue";
+	} stim_cue;
+	
+	# perform (4000 ms)
+	stimulus_event{
+		picture pic_perform;
+		time = 1993;
+		code = "imagery";
+	} stim_perform;
+	
+	# rest (3000 ms to 6000 ms)
+	stimulus_event{
+		picture pic_rest;
+		time = 5993;
+		code = "rest";
+	} stim_rest;
+		
+} main_trial;
+
+# insructions trial
+trial{
+	trial_duration = 1000;		 # ms
+	stimulus_event{
+		picture {
+			text{caption = ""; font_size = 64; max_text_width = 1500;} text_instruction;
+			x = 0; y = 0;
+		} pic_intructions;
+	} stim_instruction;
+} instructions;
+
+# insructions trial2
+trial{
+	trial_duration = forever;	
+	trial_type = first_response;
+	# ignore unintended response
+	all_responses = false;
+	stimulus_event{
+		picture {
+			text{caption = ""; font_size = 42; max_text_width = 1800;} text_instruction2;
+			x = 0; y = 100;
+			text{caption = "Ok"; width = 400; height = 100; background_color = 72, 72, 72; font_size = 40;} text_instruction2_2;
+			x = 0; y = -400;
+		} pic_intructions2;
+		target_button = 1;
+	} stim_instruction2;
+} instructions2;
+
+# begin trial
+trial{
+	trial_duration = forever;	
+	trial_type = first_response;
+	stimulus_event{
+		picture {
+			text{caption = ""; font_size = 64; height = 20;} begin_text1;
+			x = 0; y = 100;
+			text{caption = "Start"; width = 400; height = 150; background_color = 0, 128, 0; font_size = 40;} text_begin;
+			x = 0; y = -300;
+		} pic_begin;
+		target_button = 1;
+		code = "block start";
+	} stim_begin;
+} begin_experiment;
+
+
+
+
+#%% PCL ------------------------------
+begin_pcl;
+
+# experiment parameters: 
+# total number of trials 
+int total_trials = 40;
+# jitter duration range
+array <int> jitter[] = {3000,6000};
+# time at which rest sequence starts
+int rest_start_time = 6000;
+# variable for random rest duration in loop
+int rest_duration;
+# variable for final trial duration
+int trial_time;
+# array for sessions 
+array <string> session_types[] = {"execution","imagery"};
+
+# number of left or right trials
+int one_trial = total_trials/cue_image.count();
+# array for left and right trials
+array <int> trial_sequence[0];
+
+
+# creating trial sequence for left and right
+# loop over cues 
+loop int iCue=1 until iCue>cue_image.count()
+begin
+	# loop over half of trials
+	loop int iTrial=1 until iTrial>one_trial
+	begin
+		trial_sequence.add(iCue);
+		iTrial = iTrial+1;
+	end;
+	iCue = iCue+1;
+end;
+# Note: created a sequence of trials to be displayed 
+# when '1' it displays left and '2' displays right 
+
+
+# sub routine for running sessions 
+sub session (int session_choice, int session_length)
+begin 
+	# randomising left and right trial sequence
+	trial_sequence.shuffle();
+	# loop over trial sequence 
+	loop int iTrial=1 until iTrial>session_length
+	begin 
+		# choosing random rest period between 3000 ms and 6000 ms
+		rest_duration = random(jitter[1],jitter[2]);
+		# setting cue text based on the block
+		cue_text.set_caption(session_types[session_choice], true);
+		# checking trial condition
+		if trial_sequence[iTrial] == 1 then
+			# setting cue as left
+			pic_cue.set_part(1, cue_image[1]);
+			# event code for cue 
+			stim_cue.set_event_code("left_cue_" + session_types[session_choice]);
+			# event code for perform
+			stim_perform.set_event_code("left_" + session_types[session_choice]);
+		else
+			# setting cue as right
+			pic_cue.set_part(1, cue_image[2]);
+			# event code for cue
+			stim_cue.set_event_code("right_cue_" + session_types[session_choice]);
+			# event code for perform
+			stim_perform.set_event_code("right_" + session_types[session_choice]);
+		end;	
+		# calculate trial duation with random jitter
+		trial_time = rest_start_time + rest_duration;
+		# set final trial duration
+		main_trial.set_duration(trial_time);
+		# executing trial
+		main_trial.present();	
+		iTrial = iTrial+1;
+	end;
+end;
+
+
+
+# main run ---
+# note: in the subrouine pass '1' for execution session and '2' for imagery session 
+
+# welcome screen 
+text_instruction.set_caption("Welcome to the Motor Imagery Experiment", true);
+instructions.set_duration(2000);
+instructions.present();
+# general description screen 
+text_instruction2.set_caption("In this task, you have two sets of 20 trials each. In Block 1, you'll do the Motor Execution task, and in Block 2, you'll do the Motor Imagery task. \n\nFor each trial, you'll receive a cue to either physically execute movement or imagine moving your left or right hand.", true);
+instructions2.present();
+text_instruction2.set_caption("At the beginning of each trial, a fixation cross '+' will appear on the screen, indicating you to pay attention. Keep your eyes fixed on this cross and try not to blink or move. \n\nSoon after, a left or right arrow will appear next to the cross. If you see a left arrow, perform or imagine the movement of your left hand. If you see a right arrow, do the same for your right hand. This action should be done right after the arrow disappears and the words 'execution' or 'imagine' show up above the cross for 4 seconds. \n\nAfter that, the cue disappears, and you can relax your hands and eyes during this time.", true);
+instructions2.present();
+
+
+# motor execution
+# session title
+text_instruction.set_font_size(64);
+text_instruction.set_caption("Motor Execution Block", true);
+instructions.set_duration(2000);
+instructions.present();
+# session instruction
+text_instruction2.set_caption("This is the motor execution block. \n\nYou'll need to physically perform the instructed hand movement as shown by the cue. \n\nWhile you do this, avoid making any other body, head, or eye movements. During the rest period, which is when the fixation cross disappears, relax yourself.", true);
+instructions2.present();
+# motor execution training  
+# training session pause
+#begin_text1.set_caption("Motor Execution Training Block", true);
+#stim_begin.set_event_code("ME Trial Block");
+#begin_experiment.present();
+# training trials
+#int training_trials_me = 10;
+#session(1, training_trials_me);
+# training session end screen
+#text_instruction.set_font_size(48);
+#text_instruction.set_caption("End of Motor Execution Training Block", true);
+#instructions.present();
+# execution session pause
+begin_text1.set_caption("Motor Execution Experiment Block", true);
+stim_begin.set_event_code("ME Experiment Block");
+begin_experiment.present();
+# running motor execution session
+session(1, trial_sequence.count());
+
+
+# motor imagery
+# session title
+text_instruction.set_font_size(64);
+text_instruction.set_caption("Motor Imagery Block", true);
+instructions.set_duration(2000);
+instructions.present();
+# session instruction
+text_instruction2.set_caption("This is the motor imagery block. \n\nYou'll need to imagine the movement you performed during the execution block as per the cue. \n\nWhile you do this, avoid making any other body, head, or eye movements. During the rest period, which is when the fixation cross disappears, relax yourself.", true);
+instructions2.present();
+# motor imagery training  
+# training session pause
+#begin_text1.set_caption("Motor Imagery Training Block", true);
+#stim_begin.set_event_code("MI Trial Block");
+#begin_experiment.present();
+# training trials
+#int training_trials_mi = 10;
+#session(2, training_trials_mi);
+# training session end screen
+#text_instruction.set_font_size(48);
+#text_instruction.set_caption("End of Motor Imagery Training Block", true);
+#instructions.present();
+# imagery session pause
+begin_text1.set_caption("Motor Imagery Experiment Block", true);
+stim_begin.set_event_code("MI Experiment Block");
+begin_experiment.present();
+# running motor execution session
+session(2, trial_sequence.count());
+
+# end screen 
+text_instruction.set_font_size(48);
+text_instruction.set_caption("Thank you for participating", true);
+instructions.set_duration(3000);
+instructions.present();
