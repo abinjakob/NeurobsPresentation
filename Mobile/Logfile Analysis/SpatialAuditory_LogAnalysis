@@ -1,0 +1,162 @@
+% Spatial Auditory Attention Lofile Analysis 
+% -------------------------------------------
+% The code basically runs through all the '.log' files in a folder and 
+% analyse the accuracy of Stim and Catch trials. Each .log file must be 
+% for each participants. The logfiles are generated from the Presentation
+% paradigm 'SpatialAuditoryAttention_mob'. 
+%
+% note: many parts of the code is hardcoded to work for the logfile
+% generated in the format expected from Presentation. Also, it is hardcoded
+% to work for the 'event-codes' inserted while designing the experiment. 
+%
+% the program will then save the final data to the same folder
+%
+% Author: Abin Jacob
+% Date  : 17/10/2023
+
+% start fresh 
+clear;
+clc;
+
+% Specify the folder where the .log files are located
+folderPath = '/Users/abinjacob/Documents/02. NeuroCFN/Research Module/Paradigm/Analysis Codes/Auditory';
+% List all .log files in the folder
+fileList = dir(fullfile(folderPath, '*.log'));
+% Initialize a cell array to store the content of each file
+fileData = cell(1, numel(fileList));
+
+% Loop through each .log file and read its content
+for i = 1:numel(fileList)
+    % Construct the full file path
+    filePath = fullfile(folderPath, fileList(i).name);
+    
+    % Read the content of the file
+    fileNames{i} = filePath;
+end
+
+% store each subjects data
+subject = struct;
+
+% loop over files
+for iFile = 1: numel(fileNames)
+    % intialise variables
+    trial_count = 0;
+    % left trials 
+    left_count = 0;
+    left_asc_count = 0;
+    left_asc_correct = 0;
+    left_alt_count = 0;
+    left_alt_correct = 0;
+    left_dec_count = 0;
+    left_dec_correct = 0;
+    % right trials 
+    right_count = 0;
+    right_asc_count = 0;
+    right_asc_correct = 0;
+    right_alt_count = 0;
+    right_alt_correct = 0;
+    right_dec_count = 0;
+    right_dec_correct = 0;
+
+    % importing data
+    raw_data = importdata(fileNames{iFile}, '\t');
+    % copying the code column
+    code = raw_data.textdata(7:end, 3);
+
+    % loop over codes
+    for idx = 1:numel(code)
+        % check if it is a stim response
+        if strcmp(code{idx}, 'response')
+            trial_count = trial_count + 1;
+            % check if it is a right stim
+            if startsWith(code{idx-1}, 'right')
+                right_count = right_count + 1;
+                % ascending check
+                if contains(code{idx-1}, 'asc')
+                    right_asc_count = right_asc_count + 1;
+                    if strcmp(code{idx+1}, '1')
+                        right_asc_correct = right_asc_correct + 1;
+                    end 
+                % alternating check
+                elseif contains(code{idx-1}, 'alt')
+                    right_alt_count = right_alt_count + 1;
+                    true_code = 2;
+                    if strcmp(code{idx+1}, '2')
+                        right_alt_correct = right_alt_correct + 1;
+                    end 
+                % descending check
+                elseif contains(code{idx-1}, 'dec')
+                    right_alt_count = right_alt_count + 1;
+                    true_code = 3;
+                    if strcmp(code{idx+1}, '3')
+                        right_dec_correct = right_dec_correct + 1;
+                    end 
+                end 
+            elseif startsWith(code{idx-1}, 'left')
+                left_count = left_count + 1;
+                % ascending check
+                if contains(code{idx-1}, 'asc')
+                    left_asc_count = left_asc_count + 1;
+                    if strcmp(code{idx+1}, '1')
+                        left_asc_correct = left_asc_correct + 1;
+                    end 
+                % alternating check
+                elseif contains(code{idx-1}, 'alt')
+                    left_alt_count = left_alt_count + 1;
+                    true_code = 2;
+                    if strcmp(code{idx+1}, '2')
+                        left_alt_correct = left_alt_correct + 1;
+                    end 
+                % descending check
+                elseif contains(code{idx-1}, 'dec')
+                    left_alt_count = left_alt_count + 1;
+                    true_code = 3;
+                    if strcmp(code{idx+1}, '3')
+                        left_dec_correct = left_dec_correct + 1;
+                    end 
+                end 
+            end 
+        end
+    end
+
+    % calculate accuracy
+    total_accuracy = ((left_asc_correct+left_alt_correct+left_dec_correct+right_asc_correct+right_alt_correct+right_dec_correct)/trial_count)*100;
+    left_accuracy = ((left_asc_correct+left_alt_correct+left_dec_correct)/left_count)*100;
+    right_accuracy = ((right_asc_correct+right_alt_correct+right_dec_correct)/right_count)*100;
+    asc_accuracy = ((left_asc_correct+right_asc_correct)/(left_asc_count+right_asc_count))*100;
+    alt_accuracy = ((left_alt_correct+right_alt_correct)/(left_alt_count+right_alt_count))*100;
+    dec_accuracy = ((left_dec_correct+right_dec_correct)/(left_dec_count+right_dec_count))*100;
+
+    % creating a struct to store everything 
+    subject(iFile).trial_count = trial_count;
+    % left data
+    subject(iFile).data.left_count = left_count;
+    subject(iFile).data.left_asc_count = left_asc_count;
+    subject(iFile).data.left_asc_correct = left_asc_correct;
+    subject(iFile).data.left_alt_count = left_alt_count;
+    subject(iFile).data.left_alt_correct = left_alt_correct;
+    subject(iFile).data.left_dec_count = left_dec_count;
+    subject(iFile).data.left_dec_correct = left_dec_correct;
+    % right data
+    subject(iFile).data.right_count = right_count;
+    subject(iFile).data.right_asc_count = right_asc_count;
+    subject(iFile).data.right_asc_correct = right_asc_correct;
+    subject(iFile).data.right_alt_count = right_alt_count;
+    subject(iFile).data.right_alt_correct = right_alt_correct;
+    subject(iFile).data.right_dec_count = right_dec_count;
+    subject(iFile).data.right_dec_correct = right_dec_correct;
+    % accuracies
+    subject(iFile).accuracy.total_accuracy = total_accuracy;
+    subject(iFile).accuracy.left_accuracy = left_accuracy;
+    subject(iFile).accuracy.right_accuracy = right_accuracy;
+    subject(iFile).accuracy.asc_accuracy = asc_accuracy;
+    subject(iFile).accuracy.alt_accuracy = alt_accuracy;
+    subject(iFile).accuracy.dec_accuracy = dec_accuracy;
+end 
+
+% Save the struct to a .mat file
+filename = fullfile(folderPath, 'SpatialAuditory_LogAnalysis_struct.mat');
+save(filename, 'subject');
+               
+
+
