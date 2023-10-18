@@ -1,0 +1,653 @@
+#%% HEADER ---------------------------
+
+# Description:
+# Trial Design:
+
+# Abin Jacob 
+# 26/09/2023
+
+# header parameters 
+response_matching = simple_matching;
+# active buttons 
+# ['1' for Left (asc), '2' for Middle (alt) and '3' for Right (dec)] 
+active_buttons = 3;
+# ignore logging unintended responses
+response_logging = log_active;
+
+
+
+
+#%% SDL ------------------------------
+begin;
+
+# array for cues
+array {
+	bitmap{filename = "auditory_left_cue.tiff";} my_cue;
+	bitmap{filename = "auditory_right_cue.tiff";};
+} cue_text;
+
+# array of tones
+array{
+	sound {wavefile {filename = "left_tone.wav";};} left_tone;
+	sound {wavefile {filename = "center_tone.wav";};} center_tone;
+	sound {wavefile {filename = "right_tone.wav";};} right_tone;
+} tones;
+
+# array of tone variations 
+array{
+	sound {wavefile {filename = "l_asc.wav";};} var_asc;
+	sound {wavefile {filename = "r_asc.wav";};} var2_asc;
+	sound {wavefile {filename = "l_des.wav";};} var_dec;
+	sound {wavefile {filename = "r_des.wav";};} var2_dec;
+	sound {wavefile {filename = "l_alt.wav";};} var_alt;
+	sound {wavefile {filename = "r_alt.wav";};} var2_alt;
+} tone_variation;
+
+# array for block 01
+array{
+	sound {wavefile {filename = "l_asc.wav";};} b1_stim1;
+	sound {wavefile {filename = "l_alt.wav";};} b1_stim2;
+	sound {wavefile {filename = "l_des.wav";};} b1_stim3;
+	sound {wavefile {filename = "c_asc.wav";};} b1_stim4;
+	sound {wavefile {filename = "c_alt.wav";};} b1_stim5;
+	sound {wavefile {filename = "c_des.wav";};} b1_stim6;
+	sound {wavefile {filename = "r_asc.wav";};} b1_stim7;
+	sound {wavefile {filename = "r_alt.wav";};} b1_stim8;
+	sound {wavefile {filename = "r_des.wav";};} b1_stim9;
+} tone_block1;
+
+# array of block 02 
+array{
+	sound {wavefile {filename = "l_asc_r_asc.wav";};} b2_stim1;
+	sound {wavefile {filename = "l_des_r_asc.wav";};} b2_stim2;
+	sound {wavefile {filename = "r_alt_l_asc.wav";};} b2_stim3;
+	sound {wavefile {filename = "r_asc_l_alt.wav";};} b2_stim4;
+	sound {wavefile {filename = "r_alt_l_asc.wav";};} b2_stim5;
+	sound {wavefile {filename = "l_asc_r_asc.wav";};} b2_stim6;
+} tone_block2;
+
+# array of block 03 
+array{
+	sound {wavefile {filename = "0002_l_asc_r_asc_c_alt.wav";};} b3_stim1;
+	sound {wavefile {filename = "0016_l_asc_r_asc_c_des.wav";};} b3_stim2;
+	sound {wavefile {filename = "0034_l_asc_r_asc_c_des.wav";};} b3_stim3;
+	sound {wavefile {filename = "0123_l_asc_r_asc_c_asc.wav";};} b3_stim4;
+	sound {wavefile {filename = "0223_l_alt_r_alt_c_asc.wav";};} b3_stim5;
+	sound {wavefile {filename = "0231_l_asc_r_alt_c_asc.wav";};} b3_stim6;
+	sound {wavefile {filename = "0326_l_asc_r_des_c_alt.wav";};} b3_stim7;
+	sound {wavefile {filename = "0345_l_alt_r_des_c_asc.wav";};} b3_stim8;
+	sound {wavefile {filename = "0423_l_des_r_des_c_asc.wav";};} b3_stim9;
+	sound {wavefile {filename = "0456_l_alt_r_des_c_des.wav";};} b3_stim10;
+} tone_block3;
+
+
+# picture declarations:
+# for preparation
+picture{
+	bitmap{filename = "auditory_fixation.tiff";} fix_mark1;
+	x = 0; y = 0;
+} pic_prep;
+
+# for cue
+picture{
+	bitmap my_cue;
+	x = 0; y = 0; 
+} pic_cue;
+
+# for wait
+picture{
+	bitmap{filename = "auditory_fixation.tiff";} fix_mark2;
+	x = 0; y = 0;
+} pic_wait;
+
+# for present
+picture{
+	bitmap{filename = "auditory_fixation.tiff";} fix_mark3;
+	x = 0; y = 0;
+} pic_present;
+
+# for response
+picture{
+	text{caption = "Lorem Ipsum"; font_size = 48; height = 20;} text_response_question;
+	x = 0; y = 0;
+	text{caption = "Ascending"; width = 400; height = 150; background_color = 72, 72, 72; font_size = 40;} text_asc;
+	x = -700; y = -400;
+	text{caption = "Alternating"; width = 400; height = 150; background_color = 72, 72, 72; font_size = 40;} text_alt;
+	x = 0; y = -400;
+	text{caption = "Decending"; width = 400; height = 150; background_color = 72, 72, 72; font_size = 40;} text_des;
+	x = 700; y = -400;
+} pic_response;
+
+# for tone present
+picture{
+	text{caption = "default"; font_size = 48;} text_present;
+	x = 0; y = 0;
+} pic_tonepresent; 
+
+# for repeat
+picture{
+	text{caption = "Lorem Ipsum"; font_size = 48; height = 20;} text_repeat;
+	x = 0; y = 0;
+	text{caption = "Hear Again"; width = 400; height = 150; background_color = 72, 72, 72; font_size = 40;} text_rep;
+	x = -700; y = -400;
+	text{caption = "Next Sound"; width = 400; height = 150; background_color = 72, 72, 72; font_size = 40;} text_next;
+	x = 700; y = -400;
+} pic_rep;
+
+# trial declarations:
+# train trial 01 
+trial {
+	# ignore unintended response
+	all_responses = false;
+	# preparation (1000 ms)
+	stimulus_event{
+		picture pic_prep;
+		time = 0;
+		code = "prep";
+	} train01_prep;
+	
+	# wait (600 ms)
+	stimulus_event{
+		picture pic_wait;
+		time = 993;
+		code = "wait";
+	} train01_wait;
+		
+	# present (3000 ms)
+	picture pic_present; 		# fixation
+	time = 1593;
+	stimulus_event{
+		sound b1_stim1;
+		code = "default";
+		time = 1593;
+	} train01_present;
+} train_trial01;
+
+# train trial 02 
+trial {
+	# ignore unintended response
+	all_responses = false;
+	# preparation (1000 ms)
+	stimulus_event{
+		picture pic_prep;
+		time = 0;
+		code = "prep";
+	} train02_prep;
+	
+	# cue (1000 ms)
+	stimulus_event{
+		picture pic_cue;
+		code = "cue";
+		time = 993;
+	} train02_cue;
+	
+	# wait (600 ms)
+	stimulus_event{
+		picture pic_wait;
+		time = 1993;
+		code = "wait";
+	} train02_wait;
+		
+	# present (3000 ms)
+	picture pic_present; 		# fixation
+	time = 2593;
+	stimulus_event{
+		sound b2_stim1;
+		code = "default";
+		time = 2593;
+	} train02_present;
+} train_trial02;
+
+# response trial 
+trial{
+	trial_duration = 2500;
+	trial_type = first_response;
+	all_responses = false;
+	# response (1500 ms)
+	stimulus_event{
+		picture pic_response;
+		code = "response";
+		response_active = true; 
+	} stim_response;
+} response_trial;
+
+# feedback trial
+trial{
+	trial_duration = 1000;
+	picture{
+		text{caption =""; font_size =40;} text_feedback;
+		x = 0; y = 0;
+	} pic_feedback;
+} feedback_trial;
+
+# present tones 
+trial{
+	all_responses = false;
+	picture pic_tonepresent;
+	time = 0;
+	# tone with text
+	stimulus_event{
+		sound left_tone;
+		time = 300;
+	} stim_tone;
+} tone_present;
+
+trial{
+	trial_duration = forever;
+	trial_type = first_response;
+	# repeat tone
+	stimulus_event{
+		picture pic_rep;
+		target_button = 1;
+	} stim_repeat;	
+} tone_question;
+
+# insructions trial
+trial{
+	trial_duration = 3000;	
+	# ignore unintended response
+	all_responses = false;
+	stimulus_event{
+		picture {
+			text{caption = ""; font_size = 48; max_text_width = 1500;} text_instruction;
+			x = 0; y = 0;
+		} pic_intructions;
+	} stim_instruction;
+} instructions;
+
+# insructions trial2
+trial{
+	trial_duration = forever;	
+	trial_type = first_response;
+	# ignore unintended response
+	all_responses = false;
+	stimulus_event{
+		picture {
+			text{caption = ""; font_size = 42; max_text_width = 1800;} text_instruction2;
+			x = 0; y = 100;
+			text{caption = "Ok"; width = 400; height = 100; background_color = 72, 72, 72; font_size = 40;} text_instruction2_2;
+			x = 0; y = -400;
+		} pic_intructions2;
+		target_button = 1;
+	} stim_instruction2;
+} instructions2;
+
+
+#%% PCL ------------------------------
+begin_pcl;
+
+# accuracy counter
+int acc = 0;
+# maximum additional trials given if desired accuracy not achieved
+int trial_max = 10;
+array <string> tones_sequence[] = {"Left Sound", "Center Sound", "Right Sound"};
+array <string> variation_sequence[] = {"Ascending", "Ascending", "Descending", "Descending", "Alternating", "Alternating"};
+array <int> block2_cue[] = {1,1,1,2,2,2};
+array <int> file_pick[0];
+# array for left and right trial sequence  [to determine whether to attend left or right audio stim]
+array <int> trial_sequence[0];
+array <int> codeL[0];
+array <int> codeR[0];
+int sound_type;
+array <sound> stimuli[0];
+# block 1 code 
+array <int> block1_Code[] = {1,3,2,1,3,2,1,3,2};
+# block 1 trials
+int block1_trials = 4;
+int block1_respacc = 100;
+# block 2 trials
+int block2_trials = 4;
+int block2_respacc = 100;
+array <int> train2_codeL[] = {1,2,1,3,1,1};
+array <int> train2_codeR[] = {1,1,3,1,3,1};
+# block 2 trials
+int block3_trials = 10;
+int block3_respacc = 80;
+array <int> train3_codeL[] = {1,1,1,1,3,1,1,3,2,3};
+array <int> train3_codeR[] = {1,1,1,1,3,3,2,2,2,2};
+
+# random file picker 
+sub filepick(int numb)
+begin 
+	file_pick.resize(numb);
+	file_pick.fill(1, numb,1,1);
+	file_pick.shuffle();
+end; 
+
+# left-right sequence 
+sub cuepick(int cue_total)
+begin
+	loop int iCue=1 until iCue>cue_text.count()
+	begin
+		# loop over half trials
+		loop int iTrial=1 until iTrial>cue_total/2
+		begin
+			trial_sequence.add(iCue);
+			iTrial = iTrial + 1;
+		end; 
+		iCue = iCue + 1;
+	end;
+	trial_sequence.shuffle();
+end;
+
+# subroutine
+sub run_trial(int trial_index) 
+begin 
+	# check the cue condition is left
+	if trial_sequence[trial_index] == 1 then
+		# set cue as left
+		pic_cue.set_part(1, cue_text[1]);
+		# set cue event code
+		#stim_cue.set_event_code("left_cue");
+		# set sound type
+		sound_type = codeL[file_pick[trial_index]];
+		#cue = "left_";
+		text_response_question.set_caption("Left audio was ascending or alternating or descending?", true);
+	# check the cue condition is right
+	else
+		# set cue as right
+		pic_cue.set_part(1, cue_text[2]);
+		# set cue event code
+		#stim_cue.set_event_code("right_cue");
+		# set sound type
+		sound_type = codeR[file_pick[trial_index]];
+		#cue = "right_";
+		text_response_question.set_caption("Right audio was ascending or alternating or descending?", true);
+	end;
+	
+	# set target buttons based on sound_type
+	if sound_type == 1 then
+		#type = "asc_";
+		stim_response.set_target_button(1);
+	elseif sound_type == 2 then
+		#type = "dec_";
+		stim_response.set_target_button(3);
+	else
+		#type = "alt_";
+		stim_response.set_target_button(2);
+	end;
+		
+	# set preset stimulus
+	train02_present.set_stimulus(stimuli[file_pick[trial_index]]);
+	# set present stimulus event code
+	#stim_present.set_event_code(cue + type + string(file_number[trial_index]));
+	
+	# present main trial
+	train_trial02.present();
+	response_trial.present();
+end;
+
+ 
+# main run --
+
+# general intruction 
+text_instruction.set_caption(" Welcome to the \nSpatial Auditory Attention Training Block", true);
+instructions.set_duration(2000);
+instructions.present();
+text_instruction2.set_caption("The goal is to determine whether the sound streams you hear are going up in pitch (ascending), going down in pitch (descending), or alternating between going up and down.", true);
+instructions2.present();
+
+# deactivating button 2 (center buton)
+response_manager.set_button_active( 2, false );
+# presenting tones
+# intruction screen
+text_instruction.set_caption("The sound streams are presented from left, center and right directions. \n\nListen carefully to these sounds now.", true);
+instructions.set_duration(5000);
+instructions.present();
+# run block
+loop int iTone=1 until iTone>tones.count()
+begin 
+	text_present.set_caption(tones_sequence[iTone], true);
+	stim_tone.set_stimulus(tones[iTone]);
+	tone_present.present();
+	if iTone == tones.count() then
+		text_repeat.set_caption("Were you able to recognise the sounds coming from their specific directions?", true);
+		text_next.set_caption("Yes", true);
+		tone_question.present();
+		stimulus_data last = stimulus_manager.last_stimulus_data();
+		if(last.type()==last.HIT) then
+			iTone = 0;
+		end;
+	end;
+	iTone = iTone + 1;
+end;
+
+# presenting variations
+# intruction screen
+text_instruction.set_caption("These sounds can be presented ascending, descending, and alternating patterns. \n\nListen carefully for the variations.", true);
+instructions.set_duration(5000);
+instructions.present();
+# run block
+loop int iTone=1 until iTone>tone_variation.count()
+begin 
+	text_repeat.set_caption(variation_sequence[iTone], true);
+	text_next.set_caption("Next", true);
+	text_present.set_caption(variation_sequence[iTone], true);
+	stim_tone.set_stimulus(tone_variation[iTone]);
+	tone_present.present();
+	tone_question.present();
+	stimulus_data last = stimulus_manager.last_stimulus_data();
+	if(last.type()==last.INCORRECT) then
+		iTone = iTone + 1;
+	end;
+end;
+
+
+# seeting help screen 
+text_repeat.set_font_color(255,255,0);
+text_repeat.set_caption("Please call the experimenter", true);
+text_rep.set_background_color(0,0,0);
+text_next.set_background_color(0,0,0);
+text_rep.set_caption("", true);
+text_next.set_caption("", true);
+
+# block 1
+# intruction screen
+text_instruction.set_caption("Now, determine if the following sound streams are in ascending, alternating or descending patterns.", true);
+instructions.set_duration(5000);
+instructions.present();
+# activating button 2 (center buton)
+response_manager.set_button_active( 2, true );
+# run block 
+# get the trial sequence 
+filepick(tone_block1.count());
+loop int iTrial=1; int COUNT=1 until iTrial>block1_trials
+begin 		
+	# limiting trials to trial_max
+	if (COUNT>(block1_trials+trial_max)) then 
+		tone_question.present();
+		stimulus_data last = stimulus_manager.last_stimulus_data();
+		if(last.type()==last.HIT) then
+			iTrial = 1;
+			COUNT = 1;
+		else
+			break;
+		end;
+	end;
+	# set target buttons 
+	if block1_Code[file_pick[iTrial]] == 1 then
+		stim_response.set_target_button(1);
+	elseif block1_Code[file_pick[iTrial]] == 2 then
+		stim_response.set_target_button(3);
+	elseif block1_Code[file_pick[iTrial]] == 3 then
+		stim_response.set_target_button(2);
+	end; 
+	
+	# set present stimulus 
+	text_response_question.set_caption("Was the sound Ascending, Alternating or Descending?", true);
+	train01_present.set_stimulus(tone_block1[file_pick[iTrial]]);
+	train_trial01.present();
+	response_trial.present();
+	
+	# feedback
+	# checking if the response was correct
+	stimulus_data last = stimulus_manager.last_stimulus_data();
+	if(last.type()==last.HIT) then
+		#text_feedback.set_font_color(0,255,0);
+		text_feedback.set_font_size(56);
+		text_feedback.set_caption("Correct", true);
+		acc = acc + 1;
+	elseif(last.type()==last.MISS) then
+		#text_feedback.set_font_color(255,255,0);
+		text_feedback.set_font_size(56);
+		text_feedback.set_caption("Missed", true);
+	elseif(last.type()==last.INCORRECT) then
+		#text_feedback.set_font_color(255,0,0);
+		text_feedback.set_font_size(56);
+		text_feedback.set_caption("Incorrect", true);
+	end;
+	# run feedback trial
+	feedback_trial.present(); 
+	# check the accuracy in last trial (Must be 100%)
+	if iTrial == block1_trials then
+		if ((acc/block1_trials)*100) != block1_respacc then
+			# reset iTrial to repeat the block again
+			iTrial = 0;
+			# reset accuracy counter
+			acc = 0;
+			# suffling file_pick
+			file_pick.shuffle();
+		end;
+	end;
+	iTrial = iTrial + 1;
+	COUNT = COUNT + 1;
+end;
+
+text_instruction2.set_caption("We hope you noticed that the left sound stream has 4 tones, the center sound stream has 3 tones, and the right sound stream has 5 tones. \n\nRemember the number of tones it produces while you listen for whether the pitch is ascending, alternating or descending.", true);
+instructions2.present();
+
+# block 2
+response_manager.set_button_active( 2, true );
+# intruction screen
+text_instruction2.set_caption("There are now two sound streams presented together. \n\nBefore the sounds begin, a fixation cross '+' will appear on the screen, signaling that the sound streams are about to start. Soon after, a left or right arrow will appear next to the cross, indicating which sound stream you should pay attention to. \n\nAs before, determine if the sound streams are in ascending, alternating or descending patterns.", true);
+instructions2.present();
+# set the trial parameters 
+filepick(tone_block2.count()); 
+cuepick(tone_block2.count()); 
+codeL.assign(train2_codeL);
+codeR.assign(train2_codeR);
+stimuli.assign(tone_block2);
+# initialise acc counter 
+acc = 0;
+# run block 
+# loop over training files
+loop int iRun=1; int COUNT=1 until iRun>block2_trials
+begin
+	# limiting trials to trial_max
+	if (COUNT>(block2_trials+trial_max)) then 
+		tone_question.present();
+		stimulus_data last = stimulus_manager.last_stimulus_data();
+		if(last.type()==last.HIT) then
+			iRun = 1;
+			COUNT = 1;
+		else
+			break;
+		end;
+	end;
+	run_trial(iRun);
+	# feedback
+	string new_caption;
+	# checking if the response was correct
+	stimulus_data last = stimulus_manager.last_stimulus_data();
+	if(last.type()==last.HIT) then
+		#text_feedback.set_font_color(0,255,0);
+		text_feedback.set_font_size(56);
+		text_feedback.set_caption("Correct", true);
+		acc = acc + 1;
+	elseif(last.type()==last.MISS) then
+		#text_feedback.set_font_color(255,255,0);
+		text_feedback.set_font_size(56);
+		text_feedback.set_caption("Missed", true);
+	elseif(last.type()==last.INCORRECT) then
+		#text_feedback.set_font_color(255,0,0);
+		text_feedback.set_font_size(56);
+		text_feedback.set_caption("Incorrect", true);
+	end;
+	# run feedback trial
+	feedback_trial.present();
+	
+	# check the accuracy in the last trial (Must be 100%)
+	if iRun == block2_trials then 
+		if((acc/block2_trials)*100) != block2_respacc then
+			# reset the iRun to repeat the block again 
+			iRun = 0;
+			# reset accuracy counter 
+			acc = 0;
+			file_pick.shuffle();
+		end;
+	end;
+	iRun = iRun + 1;
+	COUNT = COUNT + 1;
+end;
+
+# block 3
+response_manager.set_button_active( 2, true );
+# intruction screen
+text_instruction2.set_caption("Now we will present all three sound streams together. \n\nBefore the sounds begin, a fixation cross '+' will appear on the screen, signaling that the sound streams are about to start. Soon after, a left or right arrow will appear next to the cross, indicating which sound stream you should pay attention to. \n\nDetermine if the sound streams are in ascending, alternating or descending patterns.", true);
+instructions2.present();
+# set the trial parameters 
+filepick(tone_block3.count()); 
+cuepick(tone_block3.count()); 
+codeL.assign(train3_codeL);
+codeR.assign(train3_codeR);
+stimuli.assign(tone_block3);
+# initialise acc counter 
+acc = 0;
+# run block 
+# loop over training files
+loop int iRun=1; int COUNT=1 until iRun>block3_trials
+begin
+	# limiting trials to trial_max
+	if (COUNT>(block3_trials+trial_max)) then 
+		tone_question.present();
+		stimulus_data last = stimulus_manager.last_stimulus_data();
+		if(last.type()==last.HIT) then
+			iRun = 1;
+			COUNT = 1;
+		else
+			break;
+		end;
+	end;
+	run_trial(iRun);
+	# feedback
+	string new_caption;
+	# checking if the response was correct
+	stimulus_data last = stimulus_manager.last_stimulus_data();
+	if(last.type()==last.HIT) then
+		#text_feedback.set_font_color(0,255,0);
+		text_feedback.set_font_size(56);
+		text_feedback.set_caption("Correct", true);
+		acc = acc + 1;
+	elseif(last.type()==last.MISS) then
+		#text_feedback.set_font_color(255,255,0);
+		text_feedback.set_font_size(56);
+		text_feedback.set_caption("Missed", true);
+	elseif(last.type()==last.INCORRECT) then
+		#text_feedback.set_font_color(255,0,0);
+		text_feedback.set_font_size(56);
+		text_feedback.set_caption("Incorrect", true);
+	end;
+	# run feedback trial
+	feedback_trial.present();
+	
+	# check the accuracy in the last trial (Must be 80%)
+	if iRun == block3_trials then 
+		if((acc/block3_trials)*100) <= block3_respacc then
+			# reset the iRun to repeat the block again 
+			iRun = 5;
+			# reset accuracy counter 
+			acc = 6;
+			file_pick.shuffle();
+		end;
+	end;
+	iRun = iRun + 1;
+	COUNT = COUNT + 1;
+end;
+
+# end screen 
+text_instruction.set_font_size(48);
+text_instruction.set_caption("End of Training Blocks", true);
+instructions.set_duration(3000);
+instructions.present();
+	
+
