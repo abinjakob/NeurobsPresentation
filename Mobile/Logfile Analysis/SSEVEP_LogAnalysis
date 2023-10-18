@@ -1,0 +1,112 @@
+% SSVEP Lofile Analysis 
+% ----------------------------
+% The code basically runs through all the '.log' files in a folder and 
+% analyse the accuracy of Stim and Catch trials. Each .log file must be 
+% for each participants. The logfiles are generated from the Presentation
+% paradigm 'SSVEP_mob'. 
+%
+% note: many parts of the code is hardcoded to work for the logfile
+% generated in the format expected from Presentation. Also, it is hardcoded
+% to work for the 'event-codes' inserted while designing the experiment. 
+%
+% the program will then save the final data to the same folder
+%
+% Author: Abin Jacob
+% Date  : 17/10/2023
+
+% start fresh 
+clear;
+clc;
+
+% CHANGE THESE PARAMETERES FOR TRAIN AND EXPERIMENT  
+% note: comment the ones that are not necessary
+% -------------------------------------------------
+    % Specify the folder where the .log files are located
+    folderPath = '/Users/abinjacob/Documents/02. NeuroCFN/Research Module/Paradigm/Analysis Codes/SSVEP Analysis';
+    
+    % for train:
+    %response = 'train_response'; catch_response = 'train_catch_response';
+    % for stim:
+    response = 'response'; catch_response = 'catch_response';
+% -------------------------------------------------
+
+
+
+% List all .log files in the folder
+fileList = dir(fullfile(folderPath, '*.log'));
+% Initialize a cell array to store the content of each file
+fileData = cell(1, numel(fileList));
+
+% Loop through each .log file and read its content
+for i = 1:numel(fileList)
+    % Construct the full file path
+    filePath = fullfile(folderPath, fileList(i).name);
+    
+    % Read the content of the file
+    fileNames{i} = filePath;
+end
+
+% store each subjects data
+subject = struct;
+
+% loop over files
+for iFile = 1: numel(fileNames)
+    % intialise variables
+    trial_count = 0;
+    stim_trial  = 0;
+    catch_trial = 0;
+    stim_correct = 0;
+    stim_wrong = 0;
+    catch_correct  = 0;
+    catch_wrong = 0;
+    % importing data
+    raw_data = importdata(fileNames{iFile}, '\t');
+    % copying the code column
+    code = raw_data.textdata(4:end, 3);
+    
+    % loop over codes
+    for idx = 1:numel(code)
+        % check if it is a stim response
+        if strcmp(code(idx), response)
+            trial_count = trial_count + 1;
+            stim_trial  = stim_trial + 1;
+            if strcmp(code(idx+1), '1')
+                stim_wrong = stim_wrong + 1;
+            elseif strcmp(code(idx+1), '2')
+                stim_correct = stim_correct + 1;
+            end 
+        
+        % check if it is a catch response
+        elseif strcmp(code(idx), catch_response)
+            trial_count = trial_count + 1;
+            catch_trial = catch_trial + 1;
+            if strcmp(code(idx+1), '1')
+                catch_correct = catch_correct + 1;
+            elseif strcmp(code(idx+1), '2')
+                catch_wrong = catch_wrong + 1;
+            end
+        end 
+    end 
+    
+    % calculate total accuracy
+    total_accuracy = ((stim_correct + catch_correct)/trial_count) * 100;
+    stim_accuracy = (stim_correct/stim_trial) * 100;
+    catch_accuracy = (catch_correct/catch_trial) * 100;
+
+    % creating a struct to store everything 
+    subject(iFile).trial_count = trial_count;
+    subject(iFile).data.stim_trial = stim_trial;
+    subject(iFile).data.catch_trial = catch_trial;
+    subject(iFile).data.stim_correct = stim_correct;
+    subject(iFile).data.stim_wrong = stim_wrong;
+    subject(iFile).data.catch_correct = catch_correct;
+    subject(iFile).data.catch_wrong = catch_wrong;
+    subject(iFile).acccuracy.total_accuracy = total_accuracy;
+    subject(iFile).acccuracy.stim_accuracy = stim_accuracy;
+    subject(iFile).acccuracy.catch_accuracy = catch_accuracy;
+
+end 
+
+% Save the struct to a .mat file
+filename = fullfile(folderPath, 'SSVEP_LogAnalysis_struct.mat');
+save(filename, 'subject');
