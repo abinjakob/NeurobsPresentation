@@ -317,6 +317,9 @@ begin
 	flicker_trial.present();
 end;
 
+
+string stim_code;
+int stim_pos;
 sub run(int session_length)
 begin
 	# trial screens
@@ -332,6 +335,7 @@ begin
 			stim_on_period[2] = STIM_ON_PERIOD[2];
 			stim_interval_catch[1] = STIM_INTERVAL_CATCH[1];
 			stim_interval_catch[2] = STIM_INTERVAL_CATCH[2];
+			stim_pos = 1;
 		else
 			stim_interval[1]  = STIM_INTERVAL[2];
 			stim_interval[2]  = STIM_INTERVAL[1];
@@ -341,6 +345,7 @@ begin
 			stim_interval_catch[1][2] = STIM_INTERVAL_CATCH[2][1];
 			stim_interval_catch[2][1] = STIM_INTERVAL_CATCH[1][2];
 			stim_interval_catch[2][2] = STIM_INTERVAL_CATCH[1][1];
+			stim_pos = 2;
 		end;                         
 		
 		# if catch trial
@@ -381,14 +386,24 @@ begin
 				# setting cue as left
 				pic_cue.set_part(1, cue_text[1]);
 				stim_cue.set_event_code("left_cue");
-				stim_start.set_event_code("left_stim");
+				if stim_pos == 1 then
+					stim_code = "15";
+				else
+					stim_code = "66";
+				end;
+				stim_start.set_event_code("stim_L" + stim_code);
 				# setting response screen question
 				text_response.set_caption("Did left stimulus change its speed?", true);		
 			else
 				# setting cue as right
 				pic_cue.set_part(1, cue_text[2]);
 				stim_cue.set_event_code("right_cue");
-				stim_start.set_event_code("right_stim");
+				if stim_pos == 1 then
+					stim_code = "66";
+				else
+					stim_code = "15";
+				end;
+				stim_start.set_event_code("stim_R" + stim_code);
 				# setting response screen question
 				text_response.set_caption("Did right stimulus change its speed?", true);
 			end;		
@@ -448,5 +463,3 @@ text_instruction.set_font_size(48);
 text_instruction.set_caption("Thank you for participating", true);
 instructions.set_duration(3000);
 instructions.present();
-
-
