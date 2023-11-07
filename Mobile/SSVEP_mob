@@ -51,9 +51,9 @@ picture{
 	text{caption = "Did the stimulus change speed?"; font_size = 48;} text_response;
 	x = 0; y = 0;
 	text{caption = "Yes"; width = 400; height = 150; background_color = 0, 128, 0;font_size = 40;} text_yes;
-	x = -700; y = -400;
+	x = -900; y = -400;
 	text{caption = "No"; width = 400; height = 150; background_color = 255, 0, 0; font_size = 40;} text_no;
-	x = 700; y = -400;
+	x = 900; y = -400;
 } pic_response;
 
 
@@ -76,6 +76,13 @@ trial {
 		time = 993;
 		code = "";
 	} stim_cue;
+	
+	# flicker_start
+	stimulus_event{
+		nothing{};
+		time = 1985;
+		code = "stim_start";
+	} stim_start;
 } pre_trial;
 
 # for flicker stim
@@ -85,14 +92,14 @@ trial{
 	# flicker
 	stimulus_event{
 		picture{
-			# left (15 Hz)
+			# left 
 			box box_off;				
 			x = -500; y = 0;
-			# right (10 Hz)
+			# right 
 			box box_off;
 			x = 500; y = 0;
 		} pic_flicker;
-		code = "stim";
+		#code = "stim";  ### COMMENT THIS LINE
 	}stim_flicker;
 } flicker_trial;
 
@@ -179,7 +186,7 @@ begin_pcl;
 
 # parameters
 # total number of trials 
-int total_trials = 40;
+int total_trials = 100;
 # flicker duration (ms)
 int flicker_duration = 4000;
 # number of left or right trials
@@ -220,21 +227,18 @@ end;
 catch_sequence.shuffle();
 
 
-# stimulus intervals for left (11.9 Hz) and right stimulus (10 Hz)
+# stimulus intervals for 15Hz and 6.66Hz stimulus
 # interval = 1000/ [reqd. frequency * refresh period (16.7 ms)] 
-#array <int> STIM_INTERVAL[] = {5, 6};		# 11.9Hz & 10Hz
-array <int> STIM_INTERVAL[] = {4, 7};		# 15Hz & 8.57Hz
+array <int> STIM_INTERVAL[] = {4, 9};		# 15Hz & 6.66Hz
 array <int> stim_interval[2];	
-# within stim interval period where stim is 'ON' for left (11.9 Hz) and right stimulus (10 Hz)
-array  <int> STIM_ON_PERIOD[] = {2,3};	
+# within stim interval period where stim is 'ON' 15Hz and 6.66Hz
+array  <int> STIM_ON_PERIOD[] = {2,5};	
 array  <int> stim_on_period[2];
 # counter for coordinating 'ON' and 'OFF' events
 array <int> count[] = {0,0};
 
 # catch trials parameters (slowing down flicker)
-#array <int> STIM_INTERVAL_CATCH[2][2] = {{13, 6}, {5, 13}};     # 4.6 Hz
-array <int> STIM_INTERVAL_CATCH[2][2] = {{6, 7}, {4, 9}};		 # 15Hz to 10H  z & 8.57Hz to 6.66 Hz
-#array <int> STIM_INTERVAL_CATCH[2][2] = {{7, 6}, {5, 7}};		 # 8.57 Hz
+array <int> STIM_INTERVAL_CATCH[2][2] = {{6, 9}, {4, 11}};		  # 15Hz to 10Hz & 6.66Hz to 5.45Hz
 array <int> stim_interval_catch[2][2];
 int catch_count = 0;
 
@@ -265,7 +269,7 @@ begin
 		iStim = iStim + 1;
 	end;
 	# set event code
-	stim_flicker.set_event_code(event_code);
+	#stim_flicker.set_event_code(event_code);  ### COMMENT THIS LINE
 	# running flicker trial
 	flicker_trial.present();
 end;
@@ -308,7 +312,7 @@ begin
 		iStim = iStim + 1;
 	end;
 	# set event code
-	stim_flicker.set_event_code(event_code);
+	#stim_flicker.set_event_code(event_code);  ### COMMENT THIS LINE
 	# running flicker trial
 	flicker_trial.present();
 end;
@@ -346,12 +350,14 @@ begin
 				# setting cue as left
 				pic_cue.set_part(1, cue_text[1]);
 				stim_cue.set_event_code("left_cue_catch");
+				stim_start.set_event_code("left_stim_catch");
 				# setting response screen question
 				text_response.set_caption("Did left stimulus change its speed?", true);
 			else
 				# setting cue as right
 				pic_cue.set_part(1, cue_text[2]);
 				stim_cue.set_event_code("right_cue_catch");
+				stim_start.set_event_code("right_stim_catch");
 				# setting response screen question
 				text_response.set_caption("Did right stimulus change its speed?", true);
 			end;		
@@ -375,12 +381,14 @@ begin
 				# setting cue as left
 				pic_cue.set_part(1, cue_text[1]);
 				stim_cue.set_event_code("left_cue");
+				stim_start.set_event_code("left_stim");
 				# setting response screen question
 				text_response.set_caption("Did left stimulus change its speed?", true);		
 			else
 				# setting cue as right
 				pic_cue.set_part(1, cue_text[2]);
 				stim_cue.set_event_code("right_cue");
+				stim_start.set_event_code("right_stim");
 				# setting response screen question
 				text_response.set_caption("Did right stimulus change its speed?", true);
 			end;		
@@ -421,27 +429,12 @@ text_instruction.set_caption("Welcome to the SSVEP Task", true);
 instructions.set_duration(2000);
 instructions.present();
 # general description screen 
-text_instruction2.set_caption("In this task, you'll have two blinking boxes on the screen, one on the left and one on the right that may blink at different speeds. \n\nYour task is to choose one of the boxes and keep your attention on it. \n\nSee if the blinking speed of the box you're watching changes while you observe it.", true);
+text_instruction2.set_caption("In this task, you'll have two blinking boxes on the screen, one on the left and one on the right that may blink at different speeds. \n\nYour task is to keep your attention on one of the box and identify if its blinking speed changes during the trial.", true);
 instructions2.present();
-text_instruction2.set_caption("Before the boxes appear, you'll see a fixation cross '+' on the screen, indicating that the boxes are about to show up. This helps you focus your attention. \n\nShortly after, a left or right arrow will appear next to the cross, showing you which box to observe. If you see a left arrow, focus on the left box, and if you see a right arrow, focus on the right box. \n\nOnce the blinking stops, you'll be asked if the box you were observing changed its speed. If it did change, tap 'Yes' on the left side of the screen. If it didn't change, tap 'No' on the right side of the screen.", true);
+text_instruction2.set_caption("Before the boxes appear, you'll see a fixation cross '+' on the screen, indicating that the boxes are about to show up. This helps you focus your attention. \n\nShortly after, a left or right arrow will appear next to the cross, showing you which box to observe. If you see a left arrow, focus on the left box, and if you see a right arrow, focus on the right box. \n\nOnce the blinking stops, you'll be asked if the box you were observing changed its speed. If it did change, tap 'Yes' and if it didn't change, tap 'No'.", true);
 instructions2.present();
 text_instruction2.set_caption("Please try to avoid blinking or moving your eyes, head or body while the boxes are presented", true);
 instructions2.present();
-
-# training session
-# REMOVED FROM THE EXPERIMENT BLOCK AND MADE IT SEPARATE
-# training session pause
-#begin_text1.set_caption("Training Block", true);
-#stim_begin.set_event_code("Trial Block");
-#begin_experiment.present();
-# training trials
-#int training_trials = 10;
-#run(training_trials);
-# training session end screen
-#text_instruction.set_font_size(64);
-#text_instruction.set_caption("End of Training Block", true);
-#instructions.present();
-
 
 # experiment session pause
 begin_text1.set_caption("Experiment Block", true);
@@ -449,11 +442,11 @@ stim_begin.set_event_code("Experiment Block");
 begin_experiment.present();
 # experiment session
 run(trial_sequence.count());
-
   
 # end screen 
 text_instruction.set_font_size(48);
 text_instruction.set_caption("Thank you for participating", true);
 instructions.set_duration(3000);
 instructions.present();
+
 
